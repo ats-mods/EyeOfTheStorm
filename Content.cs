@@ -43,6 +43,10 @@ namespace EyeOfTheStorm
 
         private static T NewEffect<T>(string key, string name, string desc) where T: EffectModel, new() {
             T effect = new T();
+            return SetupEffect(effect, key, name, desc);
+        }
+
+        private static T SetupEffect<T>(T effect, string key, string name, string desc) where T: EffectModel {
             var settings = MainController.Instance.Settings;
             effect.name = $"eots_{key}";
             effect.displayName = Utils.Text(name);
