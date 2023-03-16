@@ -13,6 +13,7 @@ namespace EyeOfTheStorm
     public class Content {
         public static void AddPrestigeDifficulties(){
             Prestige21();
+            Prestige22();
         }
 
         private static void Prestige21(){
@@ -27,7 +28,21 @@ namespace EyeOfTheStorm
             diff.modifiers.Last().effect = effect;
         }
 
-        private static DifficultyModel NewDifficulty(string desc){
+        private static void Prestige22(){
+            var diff = NewDifficulty("Blightrot appears every second Clearance season instead");
+            var blightrotMod = diff.modifiers[3];
+            var modsList = diff.modifiers.ToList();
+            modsList.RemoveAt(3);
+
+            var effect = blightrotMod.effect.Clone() as HookedEffectModel;
+            SetupEffect(effect, "prestige22", null, null);
+            effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
+            effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
+            diff.modifiers = modsList.ToArray();
+            diff.modifiers.Last().effect = effect;
+        }
+
+        private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){
             var settings = MainController.Instance.Settings;
             var diff = settings.difficulties.Last().Clone();
             diff.index += 1;
@@ -49,8 +64,8 @@ namespace EyeOfTheStorm
         private static T SetupEffect<T>(T effect, string key, string name, string desc) where T: EffectModel {
             var settings = MainController.Instance.Settings;
             effect.name = $"eots_{key}";
-            effect.displayName = Utils.Text(name);
-            effect.description = Utils.Text(desc);
+            if(name != null) effect.displayName = Utils.Text(name);
+            if(desc != null) effect.description = Utils.Text(desc);
             effect.label = LabelModifier();
             settings.effects = settings.effects.AddToArray(effect);
             return effect;
