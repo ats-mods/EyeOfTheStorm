@@ -14,6 +14,7 @@ namespace EyeOfTheStorm
         public static void AddPrestigeDifficulties(){
             Prestige21();
             Prestige22();
+            Prestige23();
         }
 
         private static void Prestige21(){
@@ -39,6 +40,25 @@ namespace EyeOfTheStorm
             effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
             effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
             diff.modifiers = modsList.ToArray();
+            diff.modifiers.Last().effect = effect;
+        }
+
+        private static void Prestige23(){
+            var diff = NewDifficulty("Shorter Drizzle and Clearance");
+            var effect = NewEffect<CompositeEffectModel>(
+                "prestige23", 
+                "Darkening Clouds",
+                "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\"."
+            );
+            effect.overrideIcon = Utils.LoadSprite("clouds.png");
+            var shortDrizzle = NewEffect<SeasonLengthEffectModel>("prestige23_drizzle", "[eots] shorter drizzle", "");
+            shortDrizzle.amount = -0.25f;
+            shortDrizzle.season = Season.Drizzle;
+            var shortClearance = NewEffect<SeasonLengthEffectModel>("prestige23_clearance", "[eots] shorter clearance", "");
+            shortClearance.amount = -0.25f;
+            shortClearance.season = Season.Clearance;
+            effect.rewards = new EffectModel[]{ shortDrizzle, shortClearance };
+            effect.dynamicDescriptionArgs = new TextArg[0];
             diff.modifiers.Last().effect = effect;
         }
 
