@@ -6,7 +6,7 @@ using UnityEngine;
 namespace EyeOfTheStorm
 {
     public class DummyEffectModel : EffectModel {
-        private float amount = 0f;
+        public float amount = 0f;
 
         public override string GetAmountText()
         {

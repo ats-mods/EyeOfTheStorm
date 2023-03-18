@@ -1,4 +1,5 @@
 using System.IO;
+using Eremite;
 using Eremite.Model;
 using UnityEngine;
 
@@ -7,6 +8,7 @@ namespace EyeOfTheStorm
     public static class Utils{
 
         public static readonly string LOCATEXT_KEY_PREFIX = "sp_eots";
+        public static readonly string LOCA_AMBER = "<sprite name=\"[valuable] amber\">";
 
         public static T Clone<T>(this T unityObject) where T : Object
         {
@@ -26,6 +28,10 @@ namespace EyeOfTheStorm
             tex.LoadImage(fileData);
             var sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 50.0f);
             return sprite;
-        } 
+        }
+
+        public static bool HasAmber(int amount){
+            return GameMB.StorageService.GetStorage().IsAvailable(new Good(MB.Settings.tradeCurrency.Name, amount));
+        }
     }
 }

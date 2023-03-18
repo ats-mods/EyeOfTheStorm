@@ -7,6 +7,7 @@ using Eremite.WorldMap.UI;
 using HarmonyLib;
 using QFSW.QC.Containers;
 using System.Linq;
+using UnityEngine;
 
 namespace EyeOfTheStorm
 {
@@ -15,6 +16,7 @@ namespace EyeOfTheStorm
             Prestige21();
             Prestige22();
             Prestige23();
+            Prestige24();
         }
 
         private static void Prestige21(){
@@ -46,8 +48,7 @@ namespace EyeOfTheStorm
         private static void Prestige23(){
             var diff = NewDifficulty("Shorter Drizzle and Clearance");
             var effect = NewEffect<CompositeEffectModel>(
-                "prestige23", 
-                "Darkening Clouds",
+                "prestige23", "Darkening Clouds",
                 "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\"."
             );
             effect.overrideIcon = Utils.LoadSprite("clouds.png");
@@ -62,11 +63,22 @@ namespace EyeOfTheStorm
             diff.modifiers.Last().effect = effect;
         }
 
+        private static void Prestige24(){
+            var diff = NewDifficulty("Calling traders costs amber");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige24", "Price Gouging", 
+                $"A friend in need is a customer indeed. Calling a trader costs 15 {Utils.LOCA_AMBER} Amber."
+                );
+            diff.modifiers.Last().effect = effect;
+        }
+
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){
             var settings = MainController.Instance.Settings;
             var diff = settings.difficulties.Last().Clone();
             diff.index += 1;
             diff.ascensionIndex += 1;
+            diff.rewardsMultiplier += 0.1f;
+            diff.scoreMultiplier += 0.1f;
             diff.name = $"EOTS Prestige {diff.ascensionIndex - 19}";
             var newMod = diff.modifiers.Last().Clone();
             newMod.name = $"[EOTS] {desc}";
@@ -77,7 +89,7 @@ namespace EyeOfTheStorm
         }
 
         private static T NewEffect<T>(string key, string name, string desc) where T: EffectModel, new() {
-            T effect = new T();
+            T effect = ScriptableObject.CreateInstance<T>();
             return SetupEffect(effect, key, name, desc);
         }
 
