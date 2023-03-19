@@ -7,6 +7,8 @@
     <Version>0.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>latest</LangVersion>
+	<!-- MonoMod conflict. See https://github.com/BepInEx/BepInEx.AssemblyPublicizer/issues/5-->
+	<NoWarn>$(NoWarn);CS0436</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -16,11 +18,15 @@
     <PackageReference Include="UnityEngine.Modules" Version="2020.3.24" IncludeAssets="compile" />
   </ItemGroup>
 
+	<ItemGroup>
+		<PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.0">
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+			<PrivateAssets>all</PrivateAssets>
+		</PackageReference>
+		<Reference Include="$(StormPath)/Against the Storm_Data/Managed/Assembly-CSharp.dll" Publicize="true" />
+	</ItemGroup>
+
   	<ItemGroup>
-		<Reference Include="Assembly-CSharp">
-			<HintPath>D:\UMM\assemblies_ats\Assembly-CSharp_publicized.dll</HintPath>
-			<Private>false</Private>
-		</Reference>
 		<Reference Include="UniRx">
 			<HintPath>$(StormPath)\\Against the Storm_Data\\Managed\\UniRx.dll</HintPath>
 			<Private>false</Private>
