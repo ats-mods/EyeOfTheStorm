@@ -3,6 +3,7 @@ using Eremite.Model;
 using Eremite.Model.Configs;
 using Eremite.Model.Effects;
 using Eremite.Model.Orders;
+using Eremite.WorldMap.Conditions;
 using Eremite.WorldMap.UI;
 using HarmonyLib;
 using QFSW.QC.Containers;
@@ -12,6 +13,8 @@ using UnityEngine;
 namespace EyeOfTheStorm
 {
     public class Content {
+        public static readonly string KEY_REQUIRES_AMBER = "sp_eots_requires_amber";
+
         public static void AddPrestigeDifficulties(){
             Prestige21();
             Prestige22();
@@ -69,7 +72,9 @@ namespace EyeOfTheStorm
                 "prestige24", "Price Gouging", 
                 $"A friend in need is a customer indeed. Calling a trader costs 15 {Utils.LOCA_AMBER} Amber."
                 );
+            effect.overrideIcon = Utils.LoadSprite("coinstack.png");
             diff.modifiers.Last().effect = effect;
+            Utils.Text($"Requires 15 {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
         }
 
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){

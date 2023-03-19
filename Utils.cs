@@ -18,8 +18,10 @@ namespace EyeOfTheStorm
             return Object.Instantiate<T>(unityObject);
         }
 
-        public static LocaText Text(string value){
-            var key = $"{LOCATEXT_KEY_PREFIX}_{LOCATEXT_INDEX++}";
+        public static LocaText Text(string value, string key = null){
+            if (key == null){
+                key = $"{LOCATEXT_KEY_PREFIX}_{LOCATEXT_INDEX++}";
+            }
             var ts = (TextsService) MainController.Instance.AppServices.TextsService;
             ts.texts.Add(key, value);
             return new LocaText(){ key = key };

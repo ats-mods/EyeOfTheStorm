@@ -13,6 +13,11 @@ namespace EyeOfTheStorm
            return this.amount.RoundToInt().ToString();
         }
 
+        public override int GetIntAmount()
+        {
+            return this.amount.RoundToInt();
+        }
+
         public override void OnApply(EffectContextType contextType, int contextId)
         {
         }
