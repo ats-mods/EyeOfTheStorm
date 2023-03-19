@@ -11,21 +11,11 @@ namespace EyeOfTheStorm
 {
     public class Patches {
 
-        [HarmonyPatch(typeof(MainController), nameof(MainController.InitSettings))]
+        [HarmonyPatch(typeof(MainController), nameof(MainController.OnServicesReady))]
         [HarmonyPostfix]
-        private static void MainController__InitSettings()
+        private static void HookMainControllerSetup()
         {   
             Content.AddPrestigeDifficulties();
-        }
-
-        [HarmonyPatch(typeof(TextsService), nameof(TextsService.GetLocaText))]
-        [HarmonyPrefix]
-        private static bool TextsService__GetLocaText(ref string __result, string key){
-            if(key.StartsWith(Utils.LOCATEXT_KEY_PREFIX)){
-                __result = key.Substring(Utils.LOCATEXT_KEY_PREFIX.Length);
-                return false;
-            }
-            return true;
         }
 
         [HarmonyPatch(typeof(TradeService), nameof(TradeService.CanForceArrival))]
@@ -50,7 +40,6 @@ namespace EyeOfTheStorm
             }
             return true;
         }
-
     }
     
 }
