@@ -45,6 +45,7 @@ namespace EyeOfTheStorm
             SetupEffect(effect, "prestige22", null, null);
             effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
             effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
+            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, 5 Blightrot Cysts will appear in the settlement");
             diff.modifiers = modsList.ToArray();
             diff.modifiers.Last().effect = effect;
         }
@@ -53,7 +54,7 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Shorter Drizzle and Clearance");
             var effect = NewEffect<CompositeEffectModel>(
                 "prestige23", "Darkening Clouds",
-                "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\"."
+                "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\". -25% to Drizzle and Clearance duration."
             );
             effect.overrideIcon = Utils.LoadSprite("clouds.png");
             var shortDrizzle = NewEffect<SeasonLengthEffectModel>("prestige23_drizzle", "[eots] shorter drizzle", "");
@@ -82,7 +83,7 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Higher resolve to gain Reputation");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige25", "Promised Land", 
-                $"Volunteers are lining up to embark with a Viceroy of your caliber. Their expectations are sky-high. Resolve thresholds for gaining reputation are increased by 5."
+                $"The people have heard many tales of a legendary Viceroy and expect great things from you. +5 to Resolve thresholds for gaining Reputation."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;

@@ -6,16 +6,10 @@ using UnityEngine;
 namespace EyeOfTheStorm
 {
     public class DummyEffectModel : EffectModel {
-        public float amount = 0f;
-
+        
         public override string GetAmountText()
         {
-           return this.amount.RoundToInt().ToString();
-        }
-
-        public override int GetIntAmount()
-        {
-            return this.amount.RoundToInt();
+           return "";
         }
 
         public override void OnApply(EffectContextType contextType, int contextId)
