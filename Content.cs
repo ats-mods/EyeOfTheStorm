@@ -20,6 +20,7 @@ namespace EyeOfTheStorm
             Prestige22();
             Prestige23();
             Prestige24();
+            Prestige25();
         }
 
         private static void Prestige21(){
@@ -75,6 +76,16 @@ namespace EyeOfTheStorm
             effect.overrideIcon = Utils.LoadSprite("coinstack.png");
             diff.modifiers.Last().effect = effect;
             Utils.Text($"Requires 15 {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
+        }
+
+        private static void Prestige25(){
+            var diff = NewDifficulty("Higher resolve to gain Reputation");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige25", "Promised Land", 
+                $"Volunteers are lining up to embark with a Viceroy of your caliber. Their expectations are sky-high. Resolve thresholds for gaining reputation are increased by 5."
+                );
+            effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
+            diff.modifiers.Last().effect = effect;
         }
 
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){

@@ -6,6 +6,8 @@ using System.Configuration;
 using Eremite.Controller;
 using Eremite.Buildings.UI.Trade;
 using Eremite.View.HUD;
+using UnityEngine;
+using System;
 
 namespace EyeOfTheStorm
 {
@@ -31,7 +33,7 @@ namespace EyeOfTheStorm
         [HarmonyPatch(typeof(TradeService), nameof(TradeService.ForceArrival))]
         [HarmonyPostfix]
         private static void TradeService__ForceArrival(){
-            if(Serviceable.PerksService.HasPerk("eots_prestige24"))
+            if(Utils.HasPerk("eots_prestige24"))
             {
                 SO.StorageService.Main.Remove(new Good(MB.Settings.tradeCurrency.Name, 15));
             }
@@ -41,11 +43,20 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static string EmptyTraderPanel__StartTooltipTrigger(string result){
             if(result.Equals("GameUI_TraderPanel_ForceButton_Tooltip_Desc_TooLate")){
-                if(Serviceable.PerksService.HasPerk("eots_prestige24") && !Utils.HasAmber(15)){
+                if(Utils.HasPerk("eots_prestige24") && !Utils.HasAmber(15)){
                     result = Content.KEY_REQUIRES_AMBER;
                 }
             }
             return result;
+        }
+
+        [HarmonyPatch(typeof(ResolveService), nameof(ResolveService.GetMinResolveForReputation), typeof(RaceModel))]
+        [HarmonyPostfix]
+        private static void ResolveService__GetMinResolveForReputation(ref int __result, RaceModel model){
+             if(Utils.HasPerk("eots_prestige25"))
+            {
+                __result = Mathf.Min(5+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
+            }
         }
     }
     

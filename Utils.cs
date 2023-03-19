@@ -3,6 +3,7 @@ using Eremite;
 using Eremite.Controller;
 using Eremite.Model;
 using Eremite.Services;
+using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
 namespace EyeOfTheStorm
@@ -34,6 +35,10 @@ namespace EyeOfTheStorm
             tex.LoadImage(fileData);
             var sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 50.0f);
             return sprite;
+        }
+        
+        public static bool HasPerk(string perkName){
+            return Serviceable.PerksService.HasPerk(perkName);
         }
 
         public static bool HasAmber(int amount){
