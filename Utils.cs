@@ -19,6 +19,10 @@ namespace EyeOfTheStorm
             return Object.Instantiate<T>(unityObject);
         }
 
+        public static Sprite GetSpriteOfEffect(string effectName){
+            return Serviceable.Settings.GetEffect(effectName).GetIcon();
+        }
+
         public static LocaText Text(string value, string key = null){
             if (key == null){
                 key = $"{LOCATEXT_KEY_PREFIX}_{LOCATEXT_INDEX++}";

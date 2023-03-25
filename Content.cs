@@ -3,10 +3,12 @@ using Eremite.Model;
 using Eremite.Model.Configs;
 using Eremite.Model.Effects;
 using Eremite.Model.Orders;
+using Eremite.Services;
 using Eremite.WorldMap.Conditions;
 using Eremite.WorldMap.UI;
 using HarmonyLib;
 using QFSW.QC.Containers;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -15,13 +17,15 @@ namespace EyeOfTheStorm
     public class Content {
         public static readonly string KEY_REQUIRES_AMBER = "sp_eots_requires_amber";
 
+        private static List<EffectModel> effectsToAdd = new List<EffectModel>();
+
         public static void AddPrestigeDifficulties(){
             Prestige21();
             Prestige22();
             Prestige23();
             Prestige24();
             Prestige25();
-            Cleanup();
+            Done();
         }
 
         private static void Prestige21(){
@@ -44,6 +48,7 @@ namespace EyeOfTheStorm
                 "Removing a building only refunds 50% of the original cost."
             );
             effect.amount = -0.5f;
+            effect.overrideIcon = Utils.GetSpriteOfEffect("[Mod] No Crude Workstation");
             diff.modifiers.Last().effect = effect;
         }
 
@@ -68,7 +73,7 @@ namespace EyeOfTheStorm
                 "prestige24", "Price Gouging", 
                 $"A friend in need is a customer indeed. Calling a trader costs 15 {Utils.LOCA_AMBER} Amber."
                 );
-            effect.overrideIcon = Utils.LoadSprite("coinstack.png");
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Reputation from Trade");
             diff.modifiers.Last().effect = effect;
             Utils.Text($"Requires 15 {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
         }
@@ -102,8 +107,12 @@ namespace EyeOfTheStorm
             diff.modifiers.Last().effect = effect;
         }
 
-        private static void Cleanup(){
-            
+        private static void Done(){
+            var settings = Serviceable.Settings;
+            settings.effectsCache.cache = null;
+            settings.effects.AddRangeToArray(effectsToAdd.ToArray());
+            effectsToAdd.Clear();
+            Serviceable.Settings.effectsCache.cache = null;
         }
 
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){
