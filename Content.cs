@@ -48,7 +48,7 @@ namespace EyeOfTheStorm
                 "Removing a building only refunds 50% of the original cost."
             );
             effect.amount = -0.5f;
-            effect.overrideIcon = Utils.GetSpriteOfEffect("[Mod] No Crude Workstation");
+            effect.overrideIcon = Utils.LoadSprite("toolshed.png");
             diff.modifiers.Last().effect = effect;
         }
 
@@ -82,7 +82,7 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Higher resolve to gain Reputation");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige25", "Promised Land", 
-                "The people have heard many tales of a legendary Viceroy and expect great things from you. +5 to Resolve thresholds for gaining Reputation."
+                "Expectant volunteers are lining up to embark with such a prestiguous Viceroy. +5 to Resolve thresholds for gaining Reputation."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;
