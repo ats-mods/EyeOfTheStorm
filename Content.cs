@@ -113,6 +113,7 @@ namespace EyeOfTheStorm
             diff.ascensionIndex += 1;
             diff.rewardsMultiplier += 0.1f;
             diff.scoreMultiplier += 0.1f;
+            diff.expMultiplier += 0.1f;
             diff.name = $"EOTS Prestige {diff.ascensionIndex - 19}";
             var newMod = diff.modifiers.Last().Clone();
             newMod.name = $"[EOTS] {desc}";
