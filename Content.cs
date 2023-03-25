@@ -21,6 +21,7 @@ namespace EyeOfTheStorm
             Prestige23();
             Prestige24();
             Prestige25();
+            Cleanup();
         }
 
         private static void Prestige21(){
@@ -36,35 +37,28 @@ namespace EyeOfTheStorm
         }
 
         private static void Prestige22(){
+            var diff = NewDifficulty("Removed buildings refund half.");
+            var effect = NewEffect<BuildingsRefundRateEffectModel>(
+                "prestige22",
+                "Rust and Rot",
+                "Removing a building only refunds 50% of the original cost."
+            );
+            effect.amount = -0.5f;
+            diff.modifiers.Last().effect = effect;
+        }
+
+        private static void Prestige23(){
             var diff = NewDifficulty("Blightrot appears every second Clearance season instead");
             var blightrotMod = diff.modifiers[3];
             var modsList = diff.modifiers.ToList();
             modsList.RemoveAt(3);
 
             var effect = blightrotMod.effect.Clone() as HookedEffectModel;
-            SetupEffect(effect, "prestige22", null, null);
+            SetupEffect(effect, "prestige23", null, null);
             effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
             effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
             effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, 5 Blightrot Cysts will appear in the settlement");
             diff.modifiers = modsList.ToArray();
-            diff.modifiers.Last().effect = effect;
-        }
-
-        private static void Prestige23(){
-            var diff = NewDifficulty("Shorter Drizzle and Clearance");
-            var effect = NewEffect<CompositeEffectModel>(
-                "prestige23", "Darkening Clouds",
-                "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\". -25% to Drizzle and Clearance duration."
-            );
-            effect.overrideIcon = Utils.LoadSprite("clouds.png");
-            var shortDrizzle = NewEffect<SeasonLengthEffectModel>("prestige23_drizzle", "[eots] shorter drizzle", "");
-            shortDrizzle.amount = -0.25f;
-            shortDrizzle.season = Season.Drizzle;
-            var shortClearance = NewEffect<SeasonLengthEffectModel>("prestige23_clearance", "[eots] shorter clearance", "");
-            shortClearance.amount = -0.25f;
-            shortClearance.season = Season.Clearance;
-            effect.rewards = new EffectModel[]{ shortDrizzle, shortClearance };
-            effect.dynamicDescriptionArgs = new TextArg[0];
             diff.modifiers.Last().effect = effect;
         }
 
@@ -83,10 +77,33 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Higher resolve to gain Reputation");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige25", "Promised Land", 
-                $"The people have heard many tales of a legendary Viceroy and expect great things from you. +5 to Resolve thresholds for gaining Reputation."
+                "The people have heard many tales of a legendary Viceroy and expect great things from you. +5 to Resolve thresholds for gaining Reputation."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;
+        }
+
+
+        private static void Prestige27(){
+            var diff = NewDifficulty("Shorter Drizzle and Clearance");
+            var effect = NewEffect<CompositeEffectModel>(
+                "prestige27", "Darkening Clouds",
+                "The forest whispered, \"you cannot withstand the storm\". The viceroy whispered back, \"I am the storm\". -25% to Drizzle and Clearance duration."
+            );
+            effect.overrideIcon = Utils.LoadSprite("clouds.png");
+            var shortDrizzle = NewEffect<SeasonLengthEffectModel>("prestige23_drizzle", "[eots] shorter drizzle", "");
+            shortDrizzle.amount = -0.25f;
+            shortDrizzle.season = Season.Drizzle;
+            var shortClearance = NewEffect<SeasonLengthEffectModel>("prestige23_clearance", "[eots] shorter clearance", "");
+            shortClearance.amount = -0.25f;
+            shortClearance.season = Season.Clearance;
+            effect.rewards = new EffectModel[]{ shortDrizzle, shortClearance };
+            effect.dynamicDescriptionArgs = new TextArg[0];
+            diff.modifiers.Last().effect = effect;
+        }
+
+        private static void Cleanup(){
+            
         }
 
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){
