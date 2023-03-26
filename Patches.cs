@@ -58,6 +58,21 @@ namespace EyeOfTheStorm
                 __result = Mathf.Min(5+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
             }
         }
+
+        [HarmonyPatch(typeof(CornerstonesService), nameof(CornerstonesService.FindRewardsFor))]
+        [HarmonyPostfix]
+        private static void CornerstonesService__FindRewardsFor(ref SeasonRewardModel __result){
+            if(Utils.HasPerk("eots_prestige26"))
+            {
+                if(__result != null && __result.year == 1 && __result.season == Season.Drizzle){
+                    Plugin.Log("Firing");
+                    __result = CorruptedSeasonRewardBuilder.Make();
+                    foreach (var e in __result.effectsTable.effects){
+                        Plugin.Log(e);
+                    }
+                }
+            }
+        }
     }
     
 }

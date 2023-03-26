@@ -25,6 +25,7 @@ namespace EyeOfTheStorm
             Prestige23();
             Prestige24();
             Prestige25();
+            Prestige26();
             Done();
         }
 
@@ -51,6 +52,8 @@ namespace EyeOfTheStorm
             effect.overrideIcon = Utils.LoadSprite("toolshed.png");
             diff.modifiers.Last().effect = effect;
         }
+
+
 
         private static void Prestige23(){
             var diff = NewDifficulty("Blightrot appears every second Clearance season instead");
@@ -88,6 +91,16 @@ namespace EyeOfTheStorm
             diff.modifiers.Last().effect = effect;
         }
 
+        private static void Prestige26(){
+            var diff = NewDifficulty("First cornerstone pick is negative");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige26", "Corrupted Cornerstone",
+                "Don't click decline please"
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Spawn Blightrot Around - Burial Site");
+            var model = new CorruptedSeasonRewardBuilder();
+            diff.modifiers.Last().effect = effect;
+        }
 
         private static void Prestige27(){
             var diff = NewDifficulty("Shorter Drizzle and Clearance");
