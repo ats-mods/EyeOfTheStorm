@@ -7,7 +7,9 @@ using Eremite.Controller;
 using Eremite.Buildings.UI.Trade;
 using Eremite.View.HUD;
 using UnityEngine;
+using UnityEngine.UI;
 using System;
+using Eremite.Model.State;
 
 namespace EyeOfTheStorm
 {
@@ -65,13 +67,22 @@ namespace EyeOfTheStorm
             if(Utils.HasPerk("eots_prestige26"))
             {
                 if(__result != null && __result.year == 1 && __result.season == Season.Drizzle){
-                    Plugin.Log("Firing");
                     __result = CorruptedSeasonRewardBuilder.Make();
-                    foreach (var e in __result.effectsTable.effects){
-                        Plugin.Log(e);
-                    }
                 }
             }
+        }
+
+        [HarmonyPatch(typeof(RewardPickPopup), nameof(RewardPickPopup.Show))]
+        [HarmonyPostfix]
+        private static void RewardPickPopup__Show(ref Button ___skipButton){
+            if(Utils.HasPerk("eots_prestige26")){
+                var lastPickDate = Serviceable.StateService.Gameplay.lastCornerstonePickDate;
+                if(lastPickDate == null || lastPickDate < new GameDate(){year=1, season=Season.Drizzle, quarter=SeasonQuarter.Second}){
+                    ___skipButton.interactable = false;
+                    return;
+                }
+            }
+            ___skipButton.interactable = true;
         }
     }
     

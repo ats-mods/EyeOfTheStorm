@@ -94,12 +94,13 @@ namespace EyeOfTheStorm
         private static void Prestige26(){
             var diff = NewDifficulty("First cornerstone pick is negative");
             var effect = NewEffect<DummyEffectModel>(
-                "prestige26", "Corrupted Cornerstone",
-                "Don't click decline please"
+                "prestige26", "Pick your Poison",
+                "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone choice will be corrupted."
             );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Spawn Blightrot Around - Burial Site");
             var model = new CorruptedSeasonRewardBuilder();
             diff.modifiers.Last().effect = effect;
+            CorruptedSeasonRewardBuilder.Setup();
         }
 
         private static void Prestige27(){

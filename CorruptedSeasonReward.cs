@@ -9,29 +9,27 @@ using UnityEngine;
 namespace EyeOfTheStorm
 {
     public class CorruptedSeasonRewardBuilder {
-
-        public static SeasonRewardModel Make(){
-            var model = new SeasonRewardModel() {
-                year = 1, 
-                season = Season.Drizzle, 
-                quarter = SeasonQuarter.Second,
-                
-            };
-
-            var table = ScriptableObject.CreateInstance<EffectsTable>();
+        private static EffectsTable effectsTable = null; // Create during Setup, use during Make()
+        public static void Setup(){
+            effectsTable = ScriptableObject.CreateInstance<EffectsTable>();
             // guaranteedEffects allowed to be null
             // table.guaranteedEffects = new EffectModel[];
-            var eff = Serviceable.Settings.GetEffect;
-            table.effects = new EffectsTableEntity[]{ 
+            effectsTable.effects = new EffectsTableEntity[]{ 
                 Wrap("Construction Speed Slower 25"), 
                 Wrap("FuelConsumption +33"),
                 Wrap("Longer Storm +10"),
                 Wrap("ReputationPenaltyRate 5")
             };
-            model.effectsTable = table;
-            return model;
         }
 
+        public static SeasonRewardModel Make(){
+            return new SeasonRewardModel() {
+                year = 1, 
+                season = Season.Drizzle, 
+                quarter = SeasonQuarter.Second,
+                effectsTable = effectsTable  
+            };
+        }
 
         private static EffectsTableEntity Wrap(string effectName){
             return new EffectsTableEntity(){chance=100, effect= Serviceable.Settings.GetEffect(effectName)};
