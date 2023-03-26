@@ -4,6 +4,8 @@ using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Effects;
 using Eremite.Services;
+using Eremite.Services.Monitors;
+using Eremite.View.HUD;
 using QFSW.QC.Containers;
 using UnityEngine;
 
@@ -20,7 +22,9 @@ namespace EyeOfTheStorm
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Cowardice(),
                 Blightrot(),
+                Storm(),
                 Lose(),
+                BlightMenace(),
                 NoneLeftBehind(),
             };
         }
@@ -45,6 +49,41 @@ namespace EyeOfTheStorm
             return Wrap(effect);
         }
 
+        private static EffectsTableEntity BlightMenace(){
+            var effect = Content.NewHookedEffect(
+                "cc_cystmenace", "Blightrot Menace",
+                "Receive both \"Baptism of Fire\" and \"Burnt to a Crisp\"." +
+                " Blightrot spawns each Drizzle, the amount increasing by 6 cysts each time."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("SE Marrow Mine");
+            effect.showInstantRewardsAsPerks = true;
+            effect.showHookedRewardsAsPerks = false;
+            var Effect = Serviceable.Settings.GetEffect;
+            effect.instantEffects = new EffectModel[]{ Effect("Coal for Cysts"), Effect("Hostility for Removed Cysts")};
+            effect.hooks = new HookLogic[]{new YearChangeHook(){amount=1}};
+
+            var triggerEffect = Content.NewEffect<CystMenaceEffectModel>("cc_cystmenace_trigger", "", "");
+            triggerEffect.amount = -4;
+            triggerEffect.amountToIncrease = 3;
+            triggerEffect.publishNews = true;
+            triggerEffect.news = Utils.Text("The Blightrot menace grows");
+            triggerEffect.newsDescription = Utils.Text("Reason: Blightrot Menace");
+            triggerEffect.newsSeverity = AlertSeverity.Warning;
+
+            effect.hookedEffects = new EffectModel[]{ triggerEffect };
+            return Wrap(effect);
+        }
+
+        private static EffectsTableEntity Storm(){
+            var effect = Content.NewEffect<SeasonLengthEffectModel>(
+                "cc_storm", "Blessing of the Sealed Ones", "The storm lasts another {0} longer."
+            );
+            effect.season = Season.Storm;
+            effect.amount = 2f;
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Remove Buildings Thunder");
+            return Wrap(effect);
+        }
+
         private static EffectsTableEntity Lose(){
             var effect = Content.NewHookedEffect(
                 "cc_lose", "Judgment Deferred", "You will lose the game on the 8th year"
@@ -60,13 +99,13 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity NoneLeftBehind(){
             var effect = Content.NewHookedEffect(
-                "cc_risky", "No One Left Behind", "+5 to Global Resolve. If any villager leaves or dies, you lose the game"
+                "cc_risky", "No One Left Behind", "+4 to Global Resolve. If any villager leaves or dies, you lose the game"
             );
             effect.clearEffectsOnRemove = true;
             effect.overrideIcon = Utils.LoadSprite("SGI_48_modified.png");
             effect.instantEffects = new EffectModel[]{
                 Serviceable.Settings.GetEffect("Ancient Artifact 3"),
-                Serviceable.Settings.GetEffect("Ancient Artifact 2")
+                Serviceable.Settings.GetEffect("Ancient Artifact 1"),
             };
             effect.hooks = new HookLogic[]{new VillagerDeathHook()};
             effect.hookedEffects = new EffectModel[]{ loseGameEffect };

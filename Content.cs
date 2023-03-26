@@ -57,7 +57,7 @@ namespace EyeOfTheStorm
 
 
         private static void Prestige23(){
-            var diff = NewDifficulty("Blightrot appears every second Clearance season instead");
+            var diff = NewDifficulty("Blightrot now appears every second Clearance");
             var blightrotMod = diff.modifiers[3];
             var modsList = diff.modifiers.ToList();
             modsList.RemoveAt(3);
@@ -66,7 +66,7 @@ namespace EyeOfTheStorm
             SetupEffect(effect, "prestige23", null, null);
             effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
             effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
-            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, 5 Blightrot Cysts will appear in the settlement");
+            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, Blightrot Cysts will appear in the settlement");
             diff.modifiers = modsList.ToArray();
             diff.modifiers.Last().effect = effect;
         }
@@ -85,8 +85,8 @@ namespace EyeOfTheStorm
         private static void Prestige25(){
             var diff = NewDifficulty("Higher resolve to gain Reputation");
             var effect = NewEffect<DummyEffectModel>(
-                "prestige25", "Promised Land", 
-                "Expectant volunteers are lining up to embark with such a prestiguous Viceroy. +5 to Resolve thresholds for gaining Reputation."
+                "prestige25", "Mythical Viceroy", 
+                "Your prestige has made you a legend amongst the people. +5 to Resolve thresholds for gaining Reputation."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;
