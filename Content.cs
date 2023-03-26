@@ -2,6 +2,7 @@ using Eremite.Controller;
 using Eremite.Model;
 using Eremite.Model.Configs;
 using Eremite.Model.Effects;
+using Eremite.Model.Effects.Hooked;
 using Eremite.Model.Orders;
 using Eremite.Services;
 using Eremite.WorldMap.Conditions;
@@ -61,7 +62,7 @@ namespace EyeOfTheStorm
             var modsList = diff.modifiers.ToList();
             modsList.RemoveAt(3);
 
-            var effect = blightrotMod.effect.Clone() as HookedEffectModel;
+            var effect = (HookedEffectModel) blightrotMod.effect.Clone();
             SetupEffect(effect, "prestige23", null, null);
             effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
             effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
@@ -98,7 +99,6 @@ namespace EyeOfTheStorm
                 "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone choice will be corrupted."
             );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Spawn Blightrot Around - Burial Site");
-            var model = new CorruptedSeasonRewardBuilder();
             diff.modifiers.Last().effect = effect;
             CorruptedSeasonRewardBuilder.Setup();
         }
@@ -124,9 +124,8 @@ namespace EyeOfTheStorm
         private static void Done(){
             var settings = Serviceable.Settings;
             settings.effectsCache.cache = null;
-            settings.effects.AddRangeToArray(effectsToAdd.ToArray());
+            settings.effects = settings.effects.AddRangeToArray(effectsToAdd.ToArray());
             effectsToAdd.Clear();
-            Serviceable.Settings.effectsCache.cache = null;
         }
 
         private static DifficultyModel NewDifficulty(string desc, bool addModifier = true){
@@ -146,24 +145,33 @@ namespace EyeOfTheStorm
             return diff;
         }
 
-        private static T NewEffect<T>(string key, string name, string desc) where T: EffectModel, new() {
+        public static T NewEffect<T>(string key, string name, string desc) where T: EffectModel, new() {
             T effect = ScriptableObject.CreateInstance<T>();
             return SetupEffect(effect, key, name, desc);
         }
 
-        private static T SetupEffect<T>(T effect, string key, string name, string desc) where T: EffectModel {
+        public static HookedEffectModel NewHookedEffect(string key, string name, string desc) {
+            var effect = ScriptableObject.CreateInstance<HookedEffectModel>();
+            effect.instantEffects = new EffectModel[0];
+            effect.hookedEffects = new EffectModel[0];
+            effect.hooks = new HookLogic[0];
+            effect.dynamicDescriptionArgs = new HookedTextArg[0];
+            effect.retroactivePreviewArgs = new HookedStateTextArg[0];
+            effect.statePreviewArgs = new HookedStateTextArg[0];
+            return SetupEffect(effect, key, name, desc);
+        }
+
+        public static T SetupEffect<T>(T effect, string key, string name, string desc) where T: EffectModel {
             var settings = MainController.Instance.Settings;
             effect.name = $"eots_{key}";
             if(name != null) effect.displayName = Utils.Text(name);
             if(desc != null) effect.description = Utils.Text(desc);
-            effect.label = LabelModifier();
-            settings.effects = settings.effects.AddToArray(effect);
+            var labelModifier = settings.difficulties[2].modifiers[0].effect.label;
+            effect.label = labelModifier;
+            if(effect.blockedBy == null) effect.blockedBy = new EffectModel[0];
+            if(effect.usabilityTags == null) effect.usabilityTags = new ModelTag[0];
+            effectsToAdd.Add(effect);
             return effect;
         }
-
-        private static LabelModel LabelModifier(){
-            return MainController.Instance.Settings.difficulties[2].modifiers[0].effect.label;
-        }
-
     }
 }
