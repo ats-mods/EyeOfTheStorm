@@ -19,6 +19,7 @@ namespace EyeOfTheStorm
         public static void Setup(){
             loseGameEffect = Content.NewEffect<LoseGameEffectModel>("cc_losegame", "", "");
             effectsTable = ScriptableObject.CreateInstance<EffectsTable>();
+            effectsTable.amounts = new Vector2Int(2, 2);
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
@@ -60,7 +61,7 @@ namespace EyeOfTheStorm
             hostEffect.showAmount = false;
             hostEffect.source = HostilitySource.ReputationPenalty;
             effect.rewards = new EffectModel[]{ 
-                Serviceable.Settings.GetEffect("VillagerDeathEffectBlock "), hostEffect};
+                Serviceable.Settings.GetEffect("VillagerDeathEffectBlock"), hostEffect};
             effect.dynamicDescriptionArgs = new TextArg[0];
             return Wrap(effect);
         }
@@ -121,7 +122,7 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Storm(){
             var effect = Content.NewEffect<SeasonLengthEffectModel>(
-                "cc_storm", "Blessing of the Sealed Ones", "The storm lasts another {0} longer."
+                "cc_storm", "Blessing of the Sealed Ones", "The {0} lasts another {1} longer."
             );
             effect.season = Season.Storm;
             effect.amount = 1f;
@@ -162,7 +163,7 @@ namespace EyeOfTheStorm
                 year = 1, 
                 season = Season.Drizzle, 
                 quarter = SeasonQuarter.Second,
-                effectsTable = effectsTable  
+                effectsTable = effectsTable,
             };
         }
         private static EffectsTableEntity Wrap(EffectModel effect, int chance = 10) 

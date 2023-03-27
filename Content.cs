@@ -98,7 +98,7 @@ namespace EyeOfTheStorm
                 "prestige26", "Pick your Poison",
                 "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone choice will be corrupted."
             );
-            effect.overrideIcon = Utils.GetSpriteOfEffect("Spawn Blightrot Around - Burial Site");
+            effect.overrideIcon = Utils.LoadSprite("poison.png");
             diff.modifiers.Last().effect = effect;
             CorruptedSeasonRewardBuilder.Setup();
         }
