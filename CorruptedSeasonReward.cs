@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Effects;
+using Eremite.Model.State;
 using Eremite.Services;
 using Eremite.Services.Monitors;
 using Eremite.View.HUD;
@@ -20,7 +21,8 @@ namespace EyeOfTheStorm
             effectsTable = ScriptableObject.CreateInstance<EffectsTable>();
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
-                Cowardice(),
+                Refusal(),
+                OnYourOwn(),
                 Rerolls(),
                 Blightrot(),
                 Storm(),
@@ -30,15 +32,37 @@ namespace EyeOfTheStorm
             };
         }
 
-        private static EffectsTableEntity Cowardice(){
+        private static EffectsTableEntity Refusal(){
             var effect = Content.NewEffect<ReputationPenaltyRateEffectModel>(
-                "cc_cowardice", "Cowardice",
-                "Refuse to deal with the corrupted Cornerstone. The Queen will not be pleased. Impatience grows {0} faster."
+                "cc_cowardice", "Refuse",
+                "Let someone else deal with the corrupted Cornerstone. The Queen will not be pleased. Impatience grows {0} faster."
             );
             effect.isPositive = false;
             effect.frameColorByPositive = true;
             effect.amount = 0.33f;
             return Wrap(effect, 1_000_000);
+        }
+
+        private static EffectsTableEntity OnYourOwn(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_onyourown", "On Your Own",
+                "You no longer feel the Queen's presence. Hostility does not reduce from impatience," +
+                " but villagers dying or leaving no longer increases impatience."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("VillagerDeathEffectBlock");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+
+            var hostEffect = Content.NewEffect<HostilitySourceChangeEffectModel>(
+                "cc_onyourown_hostility", "", ""
+            );
+            hostEffect.block = true;
+            hostEffect.showAmount = false;
+            hostEffect.source = HostilitySource.ReputationPenalty;
+            effect.rewards = new EffectModel[]{ 
+                Serviceable.Settings.GetEffect("VillagerDeathEffectBlock "), hostEffect};
+            effect.dynamicDescriptionArgs = new TextArg[0];
+            return Wrap(effect);
         }
 
         private static EffectsTableEntity Rerolls(){
@@ -100,7 +124,7 @@ namespace EyeOfTheStorm
                 "cc_storm", "Blessing of the Sealed Ones", "The storm lasts another {0} longer."
             );
             effect.season = Season.Storm;
-            effect.amount = 2f;
+            effect.amount = 1f;
             effect.overrideIcon = Utils.GetSpriteOfEffect("Remove Buildings Thunder");
             return Wrap(effect);
         }
