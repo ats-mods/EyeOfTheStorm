@@ -25,7 +25,7 @@ namespace EyeOfTheStorm
         }
 
         public override bool IsPerk => isPerk;
-        public bool isPerk = true;
+        public bool isPerk = false;
 
         public override Sprite GetDefaultIcon()
         {

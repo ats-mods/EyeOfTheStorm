@@ -1,4 +1,5 @@
 using System.IO;
+using System.Linq;
 using Eremite;
 using Eremite.Controller;
 using Eremite.Model;
@@ -39,6 +40,11 @@ namespace EyeOfTheStorm
             tex.LoadImage(fileData);
             var sprite = Sprite.Create(tex, new Rect(0.0f, 0.0f, tex.width, tex.height), new Vector2(0.5f, 0.5f), 50.0f);
             return sprite;
+        }
+
+        public static bool HasCondition(string conditionName){
+            return Serviceable.BiomeService.Difficulty.modifiers.Where(e => e.effect.name.Equals(conditionName)).Any()
+                || Serviceable.StateService.Conditions.lateEffects.Contains(conditionName);
         }
         
         public static bool HasPerk(string perkName){
