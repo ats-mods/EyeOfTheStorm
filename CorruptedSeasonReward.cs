@@ -21,6 +21,7 @@ namespace EyeOfTheStorm
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Cowardice(),
+                Rerolls(),
                 Blightrot(),
                 Storm(),
                 Lose(),
@@ -38,6 +39,26 @@ namespace EyeOfTheStorm
             effect.frameColorByPositive = true;
             effect.amount = 0.33f;
             return Wrap(effect, 1_000_000);
+        }
+
+        private static EffectsTableEntity Rerolls(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_rerolls", "Luck of the Draw",
+                "You can choose from {0} fewer cornerstones, but receive {1} additional rerolls."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Rewards Pack Big");
+            var moreRerolls = Content.NewEffect<CornerstonesRerollsEffectModel>(
+                "cc_rerolls_rerolls", "", ""
+            );
+            moreRerolls.amount = 5;
+            moreRerolls.isPositive = true;
+            var Effect = Serviceable.Settings.GetEffect;
+            effect.rewards = new EffectModel[]{ Effect("[Map Mod] One Perk"), moreRerolls};
+            effect.dynamicDescriptionArgs = new TextArg[]{
+                new TextArg(){sourceIndex = 0, type = TextArgType.RawAmount},
+                new TextArg(){sourceIndex = 1, type = TextArgType.Amount}
+            };
+            return Wrap(effect);
         }
 
         private static EffectsTableEntity Blightrot(){
