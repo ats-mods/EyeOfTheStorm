@@ -24,6 +24,7 @@ namespace EyeOfTheStorm
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
                 OnYourOwn(),
+                BlazeIt(),
                 Rerolls(),
                 Blightrot(),
                 Storm(),
@@ -63,6 +64,31 @@ namespace EyeOfTheStorm
             effect.rewards = new EffectModel[]{ 
                 Serviceable.Settings.GetEffect("VillagerDeathEffectBlock"), hostEffect};
             effect.dynamicDescriptionArgs = new TextArg[0];
+            return Wrap(effect);
+        }
+
+        private static EffectsTableEntity BlazeIt(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_blazeit", "Blazing Flame",
+                "Fuel consumption is increased by {0}, But your hearth gains an additional firekeeper."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Tree Wood Lost");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+
+            var fuelEffect = Content.NewEffect<FuelRateEffectModel>(
+                "cc_blazeit_fuelrate", "", ""
+            );
+            fuelEffect.amount = 1f;
+            var hearthEffect = Content.NewEffect<HearthFirekeeperEffectModel>(
+                "cc_blazeit_hearth", "", ""
+            );
+            effect.rewards = new EffectModel[]{ 
+                fuelEffect, hearthEffect
+            };
+            effect.dynamicDescriptionArgs = new TextArg[]{
+                new TextArg(){sourceIndex = 0, type = TextArgType.Amount},
+            };
             return Wrap(effect);
         }
 

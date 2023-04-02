@@ -10,6 +10,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Eremite.Model.State;
+using UniRx;
 
 namespace EyeOfTheStorm
 {
@@ -20,6 +21,19 @@ namespace EyeOfTheStorm
         private static void HookMainControllerSetup()
         {   
             Content.AddPrestigeDifficulties();
+        }
+
+        [HarmonyPatch(typeof(GameController), nameof(GameController.StartGame))]
+        [HarmonyPostfix]
+        private static void HookEveryGameStart()
+        {
+            // Too difficult to predict when GameController will exist and I can hook observers to it
+            // So just use Harmony and save us all some time
+            if(Utils.HasPerk("eots_cc_blazeit")){
+                HearthFirekeeperEffectModel.UpgradeHearth();
+            } else {
+                HearthFirekeeperEffectModel.DowngradeHearth();
+            }
         }
 
         [HarmonyPatch(typeof(TradeService), nameof(TradeService.CanForceArrival))]
