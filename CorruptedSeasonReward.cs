@@ -23,6 +23,7 @@ namespace EyeOfTheStorm
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
+                NoGrace(),
                 Explorers(),
                 OnYourOwn(),
                 BlazeIt(),
@@ -45,6 +46,17 @@ namespace EyeOfTheStorm
             effect.frameColorByPositive = true;
             effect.amount = 0.25f;
             return Wrap(effect, 1_000_000);
+        }
+
+        private static EffectsTableEntity NoGrace(){
+            var effect = Content.NewEffect<GracePeriodEffectModel>(
+                "cc_nograce", "Lack of Grace",
+                "Failure will not be tolerated. You receive no time to save your settlment after reaching max impatience"
+            );
+            effect.overrideIcon = Utils.LoadSprite("queen.png");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+            return Wrap(effect);
         }
 
         private static EffectsTableEntity Explorers(){
