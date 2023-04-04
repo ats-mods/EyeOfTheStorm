@@ -25,6 +25,7 @@ namespace EyeOfTheStorm
                 Refusal(),
                 OnYourOwn(),
                 BlazeIt(),
+                Unrustled(),
                 Rerolls(),
                 Blightrot(),
                 Storm(),
@@ -36,12 +37,12 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Refusal(){
             var effect = Content.NewEffect<ReputationPenaltyRateEffectModel>(
-                "cc_cowardice", "Refuse",
+                "cc_cowardice", "Cowardice",
                 "Let someone else deal with the corrupted Cornerstone. The Queen will not be pleased. Impatience grows {0} faster."
             );
             effect.isPositive = false;
             effect.frameColorByPositive = true;
-            effect.amount = 0.33f;
+            effect.amount = 0.25f;
             return Wrap(effect, 1_000_000);
         }
 
@@ -88,6 +89,34 @@ namespace EyeOfTheStorm
             };
             effect.dynamicDescriptionArgs = new TextArg[]{
                 new TextArg(){sourceIndex = 0, type = TextArgType.Amount},
+            };
+            return Wrap(effect);
+        }
+
+        private static EffectsTableEntity Unrustled(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_unrustled", "Unrustled Exploration",
+                "Opening Dangerous or Forbidden glades incurs an additional {0} hostility, but small glades no longer increase hostility."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("[Mod] Memory of the Forest");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+
+            var smallEffect = Content.NewEffect<HostilitySourceChangeEffectModel>(
+                "cc_unrustled_small", "", ""
+            );
+            smallEffect.block = true;
+            smallEffect.source = HostilitySource.Glade;
+            var bigEffect = Content.NewEffect<HostilitySourceChangeEffectModel>(
+                "cc_unrustled_big", "", ""
+            );
+            bigEffect.change = 10;
+            bigEffect.source = HostilitySource.DangerousGlade;
+            effect.rewards = new EffectModel[]{ 
+                smallEffect, bigEffect
+            };
+            effect.dynamicDescriptionArgs = new TextArg[]{
+                new TextArg(){sourceIndex = 1, type = TextArgType.Amount},
             };
             return Wrap(effect);
         }
