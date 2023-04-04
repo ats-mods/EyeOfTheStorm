@@ -51,16 +51,6 @@ namespace EyeOfTheStorm
         }
     }
 
-    public class CystMenaceEffectModel : SpawnCystsEffectModel {
-        public override void OnApply(EffectContextType contextType, int contextId)
-        {   
-            if (this.amount > 0) base.OnApply(contextType, contextId);
-            this.amount += amountToIncrease;
-        }
-
-        public int amountToIncrease = 3;
-    }
-
     public class HearthFirekeeperEffectModel : DummyEffectModel {
         public override void OnApply(EffectContextType contextType, int contextId)
         {

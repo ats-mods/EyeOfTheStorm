@@ -11,6 +11,7 @@ using UnityEngine.UI;
 using System;
 using Eremite.Model.State;
 using UniRx;
+using Eremite.Buildings;
 
 namespace EyeOfTheStorm
 {
@@ -97,6 +98,15 @@ namespace EyeOfTheStorm
                 }
             }
             ___skipButton.interactable = true;
+        }
+
+        [HarmonyPatch(typeof(Hearth), nameof(Hearth.Corrupt))]
+        [HarmonyPostfix]
+        private static void Hearth__Corrupt(){
+            if(Utils.HasPerk("eots_cc_cystmenace_nested")){
+                if(!Serviceable.ReputationService.IsGameFinished())
+                    Serviceable.ReputationService.Abandon();
+            }
         }
     }
     

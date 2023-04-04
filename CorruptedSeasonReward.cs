@@ -30,7 +30,7 @@ namespace EyeOfTheStorm
                 Blightrot(),
                 Storm(),
                 Lose(),
-                BlightMenace(),
+                PlayingWithFire(),
                 NoneLeftBehind(),
             };
         }
@@ -150,28 +150,27 @@ namespace EyeOfTheStorm
             return Wrap(effect);
         }
 
-        private static EffectsTableEntity BlightMenace(){
-            var effect = Content.NewHookedEffect(
-                "cc_cystmenace", "Blightrot Menace",
-                "Receive both \"Baptism of Fire\" and \"Burnt to a Crisp\"." +
-                " Blightrot spawns each Drizzle, the amount increasing by 6 cysts each time."
-            );
+        private static EffectsTableEntity PlayingWithFire(){
+            var name = "Playing with Fire";
+            var desc = "Receive both \"Baptism of Fire\" and \"Burnt to a Crisp\"." +
+                " Blightrot cysts burn for an additional {0} seconds." +
+                " If the Hearth gets fully corrupted, you lose the game";
+            var effect = Content.NewEffect<CompositeEffectModel>("cc_cystmenace", name, desc);
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+            effect.isPerk = false;
             effect.overrideIcon = Utils.GetSpriteOfEffect("SE Marrow Mine");
-            effect.showInstantRewardsAsPerks = true;
-            effect.showHookedRewardsAsPerks = false;
+            effect.showEffectsAsPerks = true;
+            var nestedEffect = Content.NewEffect<CystsBonusBurningTimeEffectModel>("cc_cystmenace_nested", name, desc);
+            nestedEffect.amount = 10;
+            nestedEffect.isPositive = false;
+            nestedEffect.frameColorByPositive = true;
+            nestedEffect.overrideIcon = effect.overrideIcon;
             var Effect = Serviceable.Settings.GetEffect;
-            effect.instantEffects = new EffectModel[]{ Effect("Coal for Cysts"), Effect("Hostility for Removed Cysts")};
-            effect.hooks = new HookLogic[]{new YearChangeHook(){amount=1}};
-
-            var triggerEffect = Content.NewEffect<CystMenaceEffectModel>("cc_cystmenace_trigger", "", "");
-            triggerEffect.amount = -4;
-            triggerEffect.amountToIncrease = 3;
-            triggerEffect.publishNews = true;
-            triggerEffect.news = Utils.Text("The Blightrot menace grows");
-            triggerEffect.newsDescription = Utils.Text("Reason: Blightrot Menace");
-            triggerEffect.newsSeverity = AlertSeverity.Warning;
-
-            effect.hookedEffects = new EffectModel[]{ triggerEffect };
+            effect.rewards = new EffectModel[]{nestedEffect, Effect("Coal for Cysts"), Effect("Hostility for Removed Cysts")};
+            effect.dynamicDescriptionArgs = new TextArg[]{
+                new TextArg(){sourceIndex = 0, type = TextArgType.Amount}
+            };
             return Wrap(effect);
         }
 
