@@ -54,6 +54,7 @@ namespace EyeOfTheStorm
                 "Failure will not be tolerated. You receive no time to save your settlment after reaching max impatience"
             );
             effect.overrideIcon = Utils.LoadSprite("queen.png");
+            effect.amount = -180;
             effect.isPositive = false;
             effect.frameColorByPositive = true;
             return Wrap(effect);
@@ -187,10 +188,12 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity PlayingWithFire(){
             var name = "Playing with Fire";
-            var desc = "Receive both \"Baptism of Fire\" and \"Burnt to a Crisp\"." +
-                " Blightrot cysts burn for an additional {0} seconds." +
+            var desc = "Blightrot cysts burn for an additional {0} seconds." +
                 " If the Hearth gets fully corrupted, you lose the game";
-            var effect = Content.NewEffect<CompositeEffectModel>("cc_cystmenace", name, desc);
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_cystmenace", name, 
+                "Receive both \"Baptism of Fire\" and \"Burnt to a Crisp\". " + desc
+            );
             effect.isPositive = false;
             effect.frameColorByPositive = true;
             effect.isPerk = false;
@@ -216,6 +219,8 @@ namespace EyeOfTheStorm
             effect.season = Season.Storm;
             effect.amount = 1f;
             effect.overrideIcon = Utils.GetSpriteOfEffect("Remove Buildings Thunder");
+            effect.isPositive = false;
+            effect.frameColorByPositive = false;
             return Wrap(effect);
         }
 
@@ -239,8 +244,8 @@ namespace EyeOfTheStorm
             effect.clearEffectsOnRemove = true;
             effect.overrideIcon = Utils.LoadSprite("SGI_48_modified.png");
             effect.instantEffects = new EffectModel[]{
-                Serviceable.Settings.GetEffect("Ancient Artifact 3"),
-                Serviceable.Settings.GetEffect("Ancient Artifact 1"),
+                Serviceable.Settings.GetEffect("Ancient Artifact 2"),
+                Serviceable.Settings.GetEffect("Ancient Artifact 2"),
             };
             effect.hooks = new HookLogic[]{new VillagerDeathHook()};
             effect.hookedEffects = new EffectModel[]{ loseGameEffect };
