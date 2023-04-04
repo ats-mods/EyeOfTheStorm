@@ -23,6 +23,7 @@ namespace EyeOfTheStorm
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
+                Explorers(),
                 OnYourOwn(),
                 BlazeIt(),
                 Unrustled(),
@@ -44,6 +45,28 @@ namespace EyeOfTheStorm
             effect.frameColorByPositive = true;
             effect.amount = 0.25f;
             return Wrap(effect, 1_000_000);
+        }
+
+        private static EffectsTableEntity Explorers(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_explorers", "Whispers of the Forest",
+                "The people seem single-mindedly obsessed with venturing into the forest." +
+                " Gain 10 to Global Resolve, but Reputation gain from Resolve is disabled."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("[Mod] Dangerous Glades Info Block");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+
+            var blockEffect = Content.NewEffect<ReputationFromResolveBlockEffectModel>(
+                "cc_explorers_block", "", ""
+            );
+            effect.rewards = new EffectModel[]{ 
+                Serviceable.Settings.GetEffect("Joy of Discovery"),
+                Serviceable.Settings.GetEffect("Explorers Boredom"),
+                blockEffect
+            };
+            effect.dynamicDescriptionArgs = new TextArg[0];
+            return Wrap(effect);
         }
 
         private static EffectsTableEntity OnYourOwn(){
