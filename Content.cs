@@ -26,7 +26,6 @@ namespace EyeOfTheStorm
             Prestige23();
             Prestige24();
             Prestige25();
-            Prestige26();
             Done();
         }
 
@@ -54,21 +53,15 @@ namespace EyeOfTheStorm
             diff.modifiers.Last().effect = effect;
         }
 
-
-
         private static void Prestige23(){
-            var diff = NewDifficulty("Blightrot now appears every second Clearance");
-            var blightrotMod = diff.modifiers[3];
-            var modsList = diff.modifiers.ToList();
-            modsList.RemoveAt(3);
-
-            var effect = (HookedEffectModel) blightrotMod.effect.Clone();
-            SetupEffect(effect, "prestige23", null, null);
-            effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
-            effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
-            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, Blightrot Cysts will appear in the settlement");
-            diff.modifiers = modsList.ToArray();
+            var diff = NewDifficulty("First cornerstone pick is negative");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige23", "Pick your Poison",
+                "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone choice will be corrupted."
+            );
+            effect.overrideIcon = Utils.LoadSprite("poison.png");
             diff.modifiers.Last().effect = effect;
+            CorruptedSeasonRewardBuilder.Setup();
         }
 
         private static void Prestige24(){
@@ -83,25 +76,29 @@ namespace EyeOfTheStorm
         }
 
         private static void Prestige25(){
-            var diff = NewDifficulty("Higher resolve to gain Reputation");
-            var effect = NewEffect<DummyEffectModel>(
-                "prestige25", "Mythical Viceroy", 
-                "Your prestige has made you a legend amongst the people. +5 to Resolve thresholds for gaining Reputation."
-                );
-            effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
+            var diff = NewDifficulty("Blightrot now appears every second Clearance");
+            var blightrotMod = diff.modifiers[3];
+            var modsList = diff.modifiers.ToList();
+            modsList.RemoveAt(3);
+
+            var effect = (HookedEffectModel) blightrotMod.effect.Clone();
+            SetupEffect(effect, "prestige25", null, null);
+            effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
+            effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
+            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, Blightrot Cysts will appear in the settlement");
+            diff.modifiers = modsList.ToArray();
             diff.modifiers.Last().effect = effect;
         }
 
-        private static void Prestige26(){
-            var diff = NewDifficulty("First cornerstone pick is negative");
-            var effect = NewEffect<DummyEffectModel>(
-                "prestige26", "Pick your Poison",
-                "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone choice will be corrupted."
-            );
-            effect.overrideIcon = Utils.LoadSprite("poison.png");
-            diff.modifiers.Last().effect = effect;
-            CorruptedSeasonRewardBuilder.Setup();
-        }
+        // private static void Prestige26(){
+        //     var diff = NewDifficulty("Higher resolve to gain Reputation");
+        //     var effect = NewEffect<DummyEffectModel>(
+        //         "prestige26", "Mythical Viceroy", 
+        //         "Your prestige has made you a legend amongst the people. +5 to Resolve thresholds for gaining Reputation."
+        //         );
+        //     effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
+        //     diff.modifiers.Last().effect = effect;
+        // }
 
         private static void Prestige27(){
             var diff = NewDifficulty("Shorter Drizzle and Clearance");

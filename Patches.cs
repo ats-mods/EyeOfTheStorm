@@ -70,7 +70,7 @@ namespace EyeOfTheStorm
         [HarmonyPatch(typeof(ResolveService), nameof(ResolveService.GetMinResolveForReputation), typeof(RaceModel))]
         [HarmonyPostfix]
         private static void ResolveService__GetMinResolveForReputation(ref int __result, RaceModel model){
-             if(Utils.HasCondition("eots_prestige25"))
+             if(Utils.HasCondition("eots_prestige26"))
             {
                 __result = Mathf.Min(5+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
             }
@@ -79,7 +79,7 @@ namespace EyeOfTheStorm
         [HarmonyPatch(typeof(CornerstonesService), nameof(CornerstonesService.FindRewardsFor))]
         [HarmonyPostfix]
         private static void CornerstonesService__FindRewardsFor(ref SeasonRewardModel __result){
-            if(Utils.HasCondition("eots_prestige26"))
+            if(Utils.HasCondition("eots_prestige23"))
             {
                 if(__result != null && __result.year == 1 && __result.season == Season.Drizzle){
                     __result = CorruptedSeasonRewardBuilder.Make();
@@ -90,7 +90,7 @@ namespace EyeOfTheStorm
         [HarmonyPatch(typeof(RewardPickPopup), nameof(RewardPickPopup.Show))]
         [HarmonyPostfix]
         private static void RewardPickPopup__Show(ref Button ___skipButton){
-            if(Utils.HasCondition("eots_prestige26")){
+            if(Utils.HasCondition("eots_prestige23")){
                 var lastPickDate = Serviceable.StateService.Gameplay.lastCornerstonePickDate;
                 if(lastPickDate == null || lastPickDate < new GameDate(){year=1, season=Season.Drizzle, quarter=SeasonQuarter.Second}){
                     ___skipButton.interactable = false;
