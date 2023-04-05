@@ -5,6 +5,7 @@ using Eremite;
 using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Effects;
+using Eremite.Model.State;
 using Eremite.Services;
 using HarmonyLib;
 using QFSW.QC.Utilities;
@@ -41,6 +42,13 @@ namespace EyeOfTheStorm
            return base.Settings.RewardColorCommonNegative;
         }
 
+    }
+
+    public class NoMoreCornerstonesEffectModel : DummyEffectModel {
+        public override void OnApply(EffectContextType contextType, int contextId)
+        {
+            Serviceable.StateService.Gameplay.lastCornerstonePickDate = new GameDate(20, Season.Storm, SeasonQuarter.First);
+        }
     }
 
     public class LoseGameEffectModel : DummyEffectModel {

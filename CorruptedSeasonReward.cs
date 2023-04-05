@@ -23,6 +23,7 @@ namespace EyeOfTheStorm
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
+                Loan(),
                 NoGrace(),
                 Explorers(),
                 OnYourOwn(),
@@ -48,10 +49,36 @@ namespace EyeOfTheStorm
             return Wrap(effect, 1_000_000);
         }
 
+        private static EffectsTableEntity Loan(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_loan", "Harpy in the hand",
+                "Instantly receive 3 cornerstone picks. This settlement will receive no more cornerstones for the remainder of the game."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Chest Working Time -30");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+
+            var blockEffect = Content.NewEffect<NoMoreCornerstonesEffectModel>("cc_loan_block", "", "");
+            var pickEffect1 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick1", "", "");
+            var pickEffect2 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick2", "", "");
+            var pickEffect3 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick3", "", "");
+            pickEffect1.year = 3;
+            pickEffect2.year = 2;
+            pickEffect2.year = 5;
+            effect.rewards = new EffectModel[]{ 
+                blockEffect,
+                pickEffect1,
+                pickEffect2,
+                pickEffect3
+            };
+            effect.dynamicDescriptionArgs = new TextArg[0];
+            return Wrap(effect);
+        }
+
         private static EffectsTableEntity NoGrace(){
             var effect = Content.NewEffect<GracePeriodEffectModel>(
                 "cc_nograce", "Lack of Grace",
-                "Failure will not be tolerated. You receive no time to save your settlment after reaching max impatience"
+                "Failure will not be tolerated. You receive no time to save your settlment after reaching maximum impatience"
             );
             effect.overrideIcon = Utils.LoadSprite("queen.png");
             effect.amount = -180;
