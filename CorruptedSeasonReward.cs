@@ -23,6 +23,7 @@ namespace EyeOfTheStorm
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
+                Gamble(),
                 Loan(),
                 NoGrace(),
                 Explorers(),
@@ -49,15 +50,34 @@ namespace EyeOfTheStorm
             return Wrap(effect, 1_000_000);
         }
 
+        private static EffectsTableEntity Gamble(){
+            var effect = Content.NewEffect<CompositeEffectModel>(
+                "cc_gamble", "Trickster's Bargain",
+                "Receive a random Mystery Box. You will have two pick two additional corrupted cornerstones."
+            );
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Rewards Pack Medium");
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
+            effect.isPerk = false;
+            var pickEffect = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_gamble_pick", "", "");
+            pickEffect.year = 1;
+            effect.rewards = new EffectModel[]{
+                pickEffect,
+                pickEffect,
+                Serviceable.Settings.GetEffect("Rewards Pack Medium"),
+            };
+            effect.dynamicDescriptionArgs = new TextArg[]{};
+            return Wrap(effect);
+        }
+
         private static EffectsTableEntity Loan(){
             var effect = Content.NewEffect<CompositeEffectModel>(
                 "cc_loan", "Harpy in the hand",
-                "Instantly receive 3 cornerstone picks. This settlement will receive no more cornerstones for the remainder of the game."
+                "Instantly receive 3 cornerstone picks. This settlement receives no more cornerstones for the remainder of the game."
             );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Chest Working Time -30");
             effect.isPositive = false;
             effect.frameColorByPositive = true;
-
             var blockEffect = Content.NewEffect<NoMoreCornerstonesEffectModel>("cc_loan_block", "", "");
             var pickEffect1 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick1", "", "");
             var pickEffect2 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick2", "", "");
