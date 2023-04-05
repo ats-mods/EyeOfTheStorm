@@ -59,8 +59,7 @@ namespace EyeOfTheStorm
             effect.isPositive = false;
             effect.frameColorByPositive = true;
             effect.isPerk = false;
-            var pickEffect = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_gamble_pick", "", "");
-            pickEffect.year = 1;
+            var pickEffect = Content.NewEffect<GrantCorruptedPickEffectModel>("cc_gamble_pick", "", "");
             effect.rewards = new EffectModel[]{
                 pickEffect,
                 pickEffect,
@@ -265,6 +264,8 @@ namespace EyeOfTheStorm
             );
             effect.season = Season.Storm;
             effect.amount = 1f;
+            effect.isPositive = false;
+            effect.frameColorByPositive = true;
             effect.overrideIcon = Utils.GetSpriteOfEffect("Remove Buildings Thunder");
             effect.isPositive = false;
             effect.frameColorByPositive = false;
@@ -273,7 +274,7 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Lose(){
             var effect = Content.NewHookedEffect(
-                "cc_lose", "Judgment Day", "Impatience does not rise with time, but on Drizzle of the 8th year, you lose the game."
+                "cc_lose", "Judgment Day", "Impatience does not rise with time, but at the end of the 7th year, you lose the game."
             );
             effect.clearEffectsOnRemove = true;
             // effect.overrideIcon = Utils.GetSpriteOfEffect("Hearth Sacrifice Block");

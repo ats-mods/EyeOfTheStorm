@@ -44,6 +44,14 @@ namespace EyeOfTheStorm
 
     }
 
+    public class GrantCorruptedPickEffectModel : DummyEffectModel {
+
+        public override void OnApply(EffectContextType contextType, int contextId)
+        {
+            ((CornerstonesService) Serviceable.CornerstonesService).GenerateRewardsFor(CorruptedSeasonRewardBuilder.Make(), true);
+        }
+    }
+
     public class NoMoreCornerstonesEffectModel : DummyEffectModel {
         public override void OnApply(EffectContextType contextType, int contextId)
         {
