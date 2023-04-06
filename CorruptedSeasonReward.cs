@@ -52,7 +52,7 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Gamble(){
             var effect = Content.NewEffect<CompositeEffectModel>(
-                "cc_gamble", "Trickster's Bargain",
+                "cc_gamble", "Curiosity",
                 "Receive a random Mystery Box. You will have two pick two additional corrupted cornerstones."
             );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Rewards Pack Medium");
@@ -60,10 +60,11 @@ namespace EyeOfTheStorm
             effect.frameColorByPositive = true;
             effect.isPerk = false;
             var pickEffect = Content.NewEffect<GrantCorruptedPickEffectModel>("cc_gamble_pick", "", "");
+            var rewardEffect = Content.NewEffect<RandomLootBoxEffectModel>("cc_gample_pack", "", "");
             effect.rewards = new EffectModel[]{
                 pickEffect,
                 pickEffect,
-                Serviceable.Settings.GetEffect("Rewards Pack Medium"),
+                rewardEffect
             };
             effect.dynamicDescriptionArgs = new TextArg[]{};
             return Wrap(effect);
@@ -208,7 +209,7 @@ namespace EyeOfTheStorm
                 "cc_rerolls", "Luck of the Draw",
                 "You can choose from {0} fewer cornerstones, but receive {1} additional rerolls."
             );
-            effect.overrideIcon = Utils.GetSpriteOfEffect("Rewards Pack Big");
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Longer Storm Rain Totem");
             var moreRerolls = Content.NewEffect<CornerstonesRerollsEffectModel>(
                 "cc_rerolls_rerolls", "", ""
             );

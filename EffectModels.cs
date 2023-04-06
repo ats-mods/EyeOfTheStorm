@@ -5,6 +5,7 @@ using Eremite;
 using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Effects;
+using Eremite.Model.Effects.Events;
 using Eremite.Model.State;
 using Eremite.Services;
 using HarmonyLib;
@@ -42,6 +43,34 @@ namespace EyeOfTheStorm
            return base.Settings.RewardColorCommonNegative;
         }
 
+    }
+
+    public class RandomLootBoxEffectModel : DummyEffectModel {
+        public RandomLootBoxEffectModel() {
+            this.isPerk = false;
+        }
+
+        private class WeightedString : IWeightable<String>{
+            public int Weight { get; internal set; }
+            public string Value{ get; internal set; }
+        }
+
+        public override void OnApply(EffectContextType contextType, int contextId)
+        {
+            var options = new WeightedString[] {
+                new WeightedString() { Weight = 3, Value = "Rewards Pack Small"},
+                new WeightedString() { Weight = 2, Value = "Rewards Pack Medium"},
+                new WeightedString() { Weight = 1, Value = "Rewards Pack Big"},
+            };
+
+            var pick = options.RandomElement().Value;
+            if ( UnityEngine.Random.value > 0.5) pick += " 1";
+            var effect = (RewardsPackEffectModel) Serviceable.Settings.GetEffect(pick);
+            var pack = effect.GetRewards();
+            pack.popupDesc = "The deal has been struck";
+            pack.popupHeader = "Trickster's Bargain";
+            effect.Grant(pack, contextType, contextId);
+        }
     }
 
     public class GrantCorruptedPickEffectModel : DummyEffectModel {
