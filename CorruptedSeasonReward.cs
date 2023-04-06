@@ -24,7 +24,7 @@ namespace EyeOfTheStorm
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
                 Gamble(),
-                Loan(),
+                //Loan(),
                 NoGrace(),
                 Explorers(),
                 OnYourOwn(),
