@@ -24,6 +24,17 @@ namespace EyeOfTheStorm
             return Serviceable.Settings.GetEffect(effectName).GetIcon();
         }
 
+        public static Sprite GetSpriteOfMystery(string effectName){
+            var s = Serviceable.Settings;
+            if(s.ContainsSimpleSeasonalEffect(effectName)){
+                return s.GetSimpleSeasonalEffect(effectName).Icon;
+            }
+            if(s.ContainsConditionalSeasonalEffect(effectName)){
+                return s.GetConditionalSeasonalEffect(effectName).Icon;
+            }
+            return GetSpriteOfEffect("Construction Cost -40");  // Placeholder_DEV
+        }
+
         public static LocaText Text(string value, string key = null){
             if (key == null){
                 key = $"{LOCATEXT_KEY_PREFIX}_{LOCATEXT_INDEX++}";

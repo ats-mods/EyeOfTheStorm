@@ -297,7 +297,7 @@ namespace EyeOfTheStorm
                 "cc_risky", "No One Left Behind", "+4 to Global Resolve. If any villager leaves or dies, you lose the game"
             );
             effect.clearEffectsOnRemove = true;
-            effect.overrideIcon = Utils.LoadSprite("SGI_48_modified.png");
+            effect.overrideIcon = Utils.GetSpriteOfMystery("Conditional Need Effect Melancholy");
             effect.instantEffects = new EffectModel[]{
                 Serviceable.Settings.GetEffect("Ancient Artifact 2"),
                 Serviceable.Settings.GetEffect("Ancient Artifact 2"),
