@@ -278,17 +278,17 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Lose(){
             var effect = Content.NewHookedEffect(
-                "cc_lose", "Judgment Day", "Impatience does not rise with time, but at the end of the 7th year, you lose the game."
+                "cc_lose", "Judgment Day", "You cannot lose due to impatience, but at the end of the 7th year, you lose the game automatically."
             );
             effect.clearEffectsOnRemove = true;
             // effect.overrideIcon = Utils.GetSpriteOfEffect("Hearth Sacrifice Block");
             effect.overrideIcon = Utils.GetSpriteOfEffect("Humans Killed 3 - Missiles");
             effect.frameColorByPositive = true;
             effect.isPositive = false;
-            var impatienceEffect = Content.NewEffect<ReputationPenaltyRateEffectModel>(
+            var impatienceEffect = Content.NewEffect<GracePeriodEffectModel>(
                 "cc_lose_impatience", "", ""
             );
-            impatienceEffect.amount = -2.0f;
+            impatienceEffect.amount = 3600;
             effect.instantEffects = new EffectModel[] { impatienceEffect };
             effect.hooks = new HookLogic[]{new YearChangeHook(){amount=8}};
             effect.hookedEffects = new EffectModel[]{ loseGameEffect };
