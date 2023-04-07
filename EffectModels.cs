@@ -58,26 +58,18 @@ namespace EyeOfTheStorm
         public override void OnApply(EffectContextType contextType, int contextId)
         {
             var options = new WeightedString[] {
-                new WeightedString() { Weight = 3, Value = "Rewards Pack Small"},
-                new WeightedString() { Weight = 2, Value = "Rewards Pack Medium"},
-                new WeightedString() { Weight = 1, Value = "Rewards Pack Big"},
+                new WeightedString() { Weight = 4, Value = "Rewards Pack Small"},
+                new WeightedString() { Weight = 3, Value = "Rewards Pack Medium"},
+                new WeightedString() { Weight = 2, Value = "Rewards Pack Big"},
             };
 
             var pick = options.RandomElement().Value;
-            if ( UnityEngine.Random.value > 0.5) pick += " 1";
+            if ( RNG.Bool() ) pick += " 1";
             var effect = (RewardsPackEffectModel) Serviceable.Settings.GetEffect(pick);
             var pack = effect.GetRewards();
             pack.popupDesc = "The deal has been struck";
             pack.popupHeader = "Trickster's Bargain";
             effect.Grant(pack, contextType, contextId);
-        }
-    }
-
-    public class GrantCorruptedPickEffectModel : DummyEffectModel {
-
-        public override void OnApply(EffectContextType contextType, int contextId)
-        {
-            ((CornerstonesService) Serviceable.CornerstonesService).GenerateRewardsFor(CorruptedSeasonRewardBuilder.Make(), true);
         }
     }
 

@@ -15,16 +15,21 @@ namespace EyeOfTheStorm
     public class CorruptedSeasonRewardBuilder {
         private static EffectsTable effectsTable = null; // Create during Setup, use during Make()
         private static EffectModel loseGameEffect;
+        private static EffectModel corruptionMarkerEffect;
 
         public static void Setup(){
             loseGameEffect = Content.NewEffect<LoseGameEffectModel>("cc_losegame", "", "");
+            var markerEffect = Content.NewEffect<DummyEffectModel>( "prestige23_marker", "Pick your poison", "Your next cornerstone pick will be corrupted");
+            markerEffect.isPerk = true;
+            markerEffect.overrideIcon = Utils.LoadSprite("poison.png");
+            corruptionMarkerEffect = markerEffect;
             effectsTable = ScriptableObject.CreateInstance<EffectsTable>();
             effectsTable.amounts = new Vector2Int(2, 2);
             // guaranteedEffects allowed to be null. Not used for cornerstone picks
             effectsTable.effects = new EffectsTableEntity[]{ 
                 Refusal(),
                 Gamble(),
-                //Loan(),
+                Loan(),
                 NoGrace(),
                 Explorers(),
                 OnYourOwn(),
@@ -52,20 +57,17 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Gamble(){
             var effect = Content.NewEffect<CompositeEffectModel>(
-                "cc_gamble", "Curiosity",
-                "Receive a random Mystery Box. You will have two pick two additional corrupted cornerstones."
+                "cc_gamble", "Trickster's Gamble",
+                "Your next Cornerstone pick will also be corrupted. Immediately receive a random Mystery Box."
             );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Rewards Pack Medium");
+            effect.showEffectsAsPerks = true;
             effect.isPositive = false;
             effect.frameColorByPositive = true;
             effect.isPerk = false;
-            var pickEffect = Content.NewEffect<GrantCorruptedPickEffectModel>("cc_gamble_pick", "", "");
+            var pickEffect = corruptionMarkerEffect;
             var rewardEffect = Content.NewEffect<RandomLootBoxEffectModel>("cc_gample_pack", "", "");
-            effect.rewards = new EffectModel[]{
-                pickEffect,
-                pickEffect,
-                rewardEffect
-            };
+            effect.rewards = new EffectModel[]{ pickEffect, rewardEffect };
             effect.dynamicDescriptionArgs = new TextArg[]{};
             return Wrap(effect);
         }
@@ -84,7 +86,7 @@ namespace EyeOfTheStorm
             var pickEffect3 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick3", "", "");
             pickEffect1.year = 3;
             pickEffect2.year = 2;
-            pickEffect2.year = 5;
+            pickEffect3.year = 5;
             effect.rewards = new EffectModel[]{ 
                 blockEffect,
                 pickEffect1,
@@ -261,7 +263,7 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity Storm(){
             var effect = Content.NewEffect<SeasonLengthEffectModel>(
-                "cc_storm", "Blessing of the Sealed Ones", "The {0} lasts another {1} longer."
+                "cc_storm", "Blessing of the Sealed Ones", "The {0} lasts another 2 minutes longer."
             );
             effect.season = Season.Storm;
             effect.amount = 1f;

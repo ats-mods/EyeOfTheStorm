@@ -10,8 +10,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System;
 using Eremite.Model.State;
-using UniRx;
 using Eremite.Buildings;
+using UniRx;
 
 namespace EyeOfTheStorm
 {
@@ -30,10 +30,24 @@ namespace EyeOfTheStorm
         {
             // Too difficult to predict when GameController will exist and I can hook observers to it
             // So just use Harmony and save us all some time
+            var isNewGame = MB.GameSaveService.IsNewGame();
+
+            // Handle lingering or lacking firekeeper job slots from previous game.
             if(Utils.HasPerk("eots_cc_blazeit")){
                 HearthFirekeeperEffectModel.UpgradeHearth();
             } else {
                 HearthFirekeeperEffectModel.DowngradeHearth();
+            }
+
+            if(Utils.HasCondition("eots_prestige23")){
+                var perks = Serviceable.PerksService;
+                var corruptionMarkerName = "eots_prestige23_marker";
+                
+                if(isNewGame) perks.AddPerk(corruptionMarkerName, false);
+
+                Serviceable.CornerstonesService.OnRewardsPicked
+                    .Where(()=>perks.HasPerk(corruptionMarkerName))
+                    .Subscribe<Unit>(()=>perks.RemovePerk(corruptionMarkerName));
             }
         }
 
@@ -79,18 +93,17 @@ namespace EyeOfTheStorm
         [HarmonyPatch(typeof(CornerstonesService), nameof(CornerstonesService.FindRewardsFor))]
         [HarmonyPostfix]
         private static void CornerstonesService__FindRewardsFor(ref SeasonRewardModel __result){
-            if(Utils.HasCondition("eots_prestige23"))
+            var corruptionMarkerName = "eots_prestige23_marker";
+            if(__result != null && Utils.HasPerk(corruptionMarkerName))
             {
-                if(__result != null && __result.year == 1 && __result.season == Season.Drizzle){
-                    __result = CorruptedSeasonRewardBuilder.Make();
-                }
+                __result = CorruptedSeasonRewardBuilder.Make();
             }
         }
 
         [HarmonyPatch(typeof(RewardPickPopup), nameof(RewardPickPopup.Show))]
         [HarmonyPostfix]
         private static void RewardPickPopup__Show(ref Button ___skipButton){
-            if(Utils.HasCondition("eots_prestige23")){
+            if(Utils.HasPerk("eots_prestige23_marker")){
                 var lastPickDate = Serviceable.StateService.Gameplay.lastCornerstonePickDate;
                 if(lastPickDate == null || lastPickDate < new GameDate(){year=1, season=Season.Drizzle, quarter=SeasonQuarter.Second}){
                     ___skipButton.interactable = false;
