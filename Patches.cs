@@ -42,7 +42,7 @@ namespace EyeOfTheStorm
             if(Utils.HasCondition("eots_prestige23")){
                 var perks = Serviceable.PerksService;
                 var corruptionMarkerName = "eots_prestige23_marker";
-                
+
                 if(isNewGame) perks.AddPerk(corruptionMarkerName, false);
 
                 Serviceable.CornerstonesService.OnRewardsPicked
@@ -96,7 +96,7 @@ namespace EyeOfTheStorm
             var corruptionMarkerName = "eots_prestige23_marker";
             if(__result != null && Utils.HasPerk(corruptionMarkerName))
             {
-                __result = CorruptedSeasonRewardBuilder.Make();
+                __result = CorruptedSeasonRewardBuilder.Make(__result);
             }
         }
 

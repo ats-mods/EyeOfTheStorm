@@ -309,11 +309,11 @@ namespace EyeOfTheStorm
             return Wrap(effect);
         }
 
-        public static SeasonRewardModel Make(){
+        public static SeasonRewardModel Make(SeasonRewardModel original){
             return new SeasonRewardModel() {
-                year = 1, 
-                season = Season.Drizzle, 
-                quarter = SeasonQuarter.Second,
+                year = original.year,
+                season = original.season, 
+                quarter = original.quarter,
                 effectsTable = effectsTable,
             };
         }
