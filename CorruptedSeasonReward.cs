@@ -80,6 +80,7 @@ namespace EyeOfTheStorm
             effect.overrideIcon = Utils.GetSpriteOfEffect("Chest Working Time -30");
             effect.isPositive = false;
             effect.frameColorByPositive = true;
+            effect.isPerk = false;
             var blockEffect = Content.NewEffect<NoMoreCornerstonesEffectModel>("cc_loan_block", "", "");
             var pickEffect1 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick1", "", "");
             var pickEffect2 = Content.NewEffect<ExtraCornerstonePickEffectModel>("cc_loan_pick2", "", "");
