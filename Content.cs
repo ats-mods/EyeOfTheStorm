@@ -17,6 +17,7 @@ namespace EyeOfTheStorm
 {
     public class Content {
         public static readonly string KEY_REQUIRES_AMBER = "sp_eots_requires_amber";
+        public static readonly int TRADER_CALL_AMBER_COST = 10;
 
         private static List<EffectModel> effectsToAdd = new List<EffectModel>();
 
@@ -67,11 +68,11 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Calling traders costs amber");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige24", "Price Gouging", 
-                $"A friend in need is a customer indeed. Calling a trader costs 15 {Utils.LOCA_AMBER} Amber."
+                $"A friend in need is a customer indeed. Calling a trader costs {TRADER_CALL_AMBER_COST} {Utils.LOCA_AMBER} Amber."
                 );
             effect.overrideIcon = Utils.GetSpriteOfEffect("Reputation from Trade");
             diff.modifiers.Last().effect = effect;
-            Utils.Text($"Requires 15 {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
+            Utils.Text($"Requires {TRADER_CALL_AMBER_COST} {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
         }
 
         private static void Prestige25(){
