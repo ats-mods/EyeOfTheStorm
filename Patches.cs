@@ -12,6 +12,7 @@ using System;
 using Eremite.Model.State;
 using Eremite.Buildings;
 using UniRx;
+using System.Net.Mime;
 
 namespace EyeOfTheStorm
 {
@@ -55,8 +56,7 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static bool TradeService__CanForceArrival(bool canPay){
             if(canPay && Utils.HasCondition("eots_prestige24")){
-                //TODO: dehardcode this. Use the Perk amount
-                return Utils.HasAmber(15);
+                return Utils.HasAmber(Content.TRADER_CALL_AMBER_COST);
             }
             return canPay;
         }
@@ -66,7 +66,7 @@ namespace EyeOfTheStorm
         private static void TradeService__ForceArrival(){
             if(Utils.HasCondition("eots_prestige24"))
             {
-                SO.StorageService.Main.Remove(new Good(MB.Settings.tradeCurrency.Name, 15));
+                SO.StorageService.Main.Remove(new Good(MB.Settings.tradeCurrency.Name, Content.TRADER_CALL_AMBER_COST));
             }
         }
 
@@ -74,7 +74,7 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static string EmptyTraderPanel__StartTooltipTrigger(string result){
             if(result.Equals("GameUI_TraderPanel_ForceButton_Tooltip_Desc_TooLate")){
-                if(Utils.HasCondition("eots_prestige24") && !Utils.HasAmber(15)){
+                if(Utils.HasCondition("eots_prestige24") && !Utils.HasAmber(Content.TRADER_CALL_AMBER_COST)){
                     result = Content.KEY_REQUIRES_AMBER;
                 }
             }
