@@ -104,11 +104,8 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static void RewardPickPopup__Show(ref Button ___skipButton){
             if(Utils.HasPerk("eots_prestige23_marker")){
-                var lastPickDate = Serviceable.StateService.Gameplay.lastCornerstonePickDate;
-                if(lastPickDate == null || lastPickDate < new GameDate(){year=1, season=Season.Drizzle, quarter=SeasonQuarter.Second}){
-                    ___skipButton.interactable = false;
-                    return;
-                }
+                ___skipButton.interactable = false;
+                return;
             }
             ___skipButton.interactable = true;
         }
