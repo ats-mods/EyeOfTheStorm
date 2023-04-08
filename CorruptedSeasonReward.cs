@@ -297,12 +297,12 @@ namespace EyeOfTheStorm
 
         private static EffectsTableEntity NoneLeftBehind(){
             var effect = Content.NewHookedEffect(
-                "cc_risky", "No One Left Behind", "+4 to Global Resolve. If any villager leaves or dies, you lose the game"
+                "cc_risky", "No One Left Behind", "+5 to Global Resolve. If any villager leaves or dies, you lose the game"
             );
             effect.clearEffectsOnRemove = true;
             effect.overrideIcon = Utils.GetSpriteOfMystery("Conditional Need Effect Melancholy");
             effect.instantEffects = new EffectModel[]{
-                Serviceable.Settings.GetEffect("Ancient Artifact 2"),
+                Serviceable.Settings.GetEffect("Ancient Artifact 3"),
                 Serviceable.Settings.GetEffect("Ancient Artifact 2"),
             };
             effect.hooks = new HookLogic[]{new VillagerDeathHook()};
