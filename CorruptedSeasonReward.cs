@@ -51,7 +51,7 @@ namespace EyeOfTheStorm
             );
             effect.isPositive = false;
             effect.frameColorByPositive = true;
-            effect.amount = 0.25f;
+            effect.amount = 0.2f;
             return Wrap(effect, 1_000_000);
         }
 
