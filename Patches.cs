@@ -23,6 +23,7 @@ namespace EyeOfTheStorm
         private static void HookMainControllerSetup()
         {   
             Content.AddPrestigeDifficulties();
+            GathererHutCreator.Patch();
         }
 
         [HarmonyPatch(typeof(GameController), nameof(GameController.StartGame))]
@@ -32,6 +33,10 @@ namespace EyeOfTheStorm
             // Too difficult to predict when GameController will exist and I can hook observers to it
             // So just use Harmony and save us all some time
             var isNewGame = MB.GameSaveService.IsNewGame();
+
+            if(isNewGame){
+                GathererHutCreator.UpdateEssentialBuildings();
+            }
 
             // Handle lingering or lacking firekeeper job slots from previous game.
             if(Utils.HasPerk("eots_cc_blazeit")){

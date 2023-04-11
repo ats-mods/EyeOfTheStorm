@@ -15,6 +15,13 @@ namespace EyeOfTheStorm
         private static int LOCATEXT_INDEX = 0;
         public static readonly string LOCA_AMBER = "<sprite name=\"[valuable] amber\">";
 
+        public static T Clone<T>(this T unityObject, string newName) where T : SO
+        {
+            var result = Object.Instantiate<T>(unityObject);
+            result.name = result.cachedName = newName;
+            return result;
+        }
+
         public static T Clone<T>(this T unityObject) where T : Object
         {
             return Object.Instantiate<T>(unityObject);
