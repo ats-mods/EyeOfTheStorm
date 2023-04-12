@@ -19,8 +19,8 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static void HookMainControllerSetup()
         {   
-            Content.AddPrestigeDifficulties();
             GathererHutCreator.Patch();
+            Content.AddPrestigeDifficulties();
         }
 
         [HarmonyPatch(typeof(GameController), nameof(GameController.StartGame))]

@@ -3,10 +3,10 @@ using System.Linq;
 using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Configs;
+using Eremite.Model.Effects;
 using Eremite.Services;
 using HarmonyLib;
 using UniRx;
-using UnityEngine;
 
 namespace EyeOfTheStorm
 {
@@ -26,6 +26,7 @@ namespace EyeOfTheStorm
             var model = (GathererHutModel) originalModel.replaces;
             AddSOsToSettings(model);
             AddAsBlueprint(originalModel);
+            AddAsTraderPerk(originalModel);
         }
 
         private static GathererHutModel CloneModel(string modelName){
@@ -54,7 +55,7 @@ namespace EyeOfTheStorm
         private static GathererHutRecipeModel CloneRecipe(GathererHutRecipeModel tier1) {
             var tier0 = PrimitiveModel.recipes[0];
             var result = tier1.Clone(tier1.Name + " T0");
-            result.productionTime = tier0.productionTime;
+            result.productionTime *= 2;
             result.grade = tier0.grade;
             result.gradeDesc = tier0.gradeDesc;
             return result;
@@ -83,6 +84,32 @@ namespace EyeOfTheStorm
             if(!set.Name.Contains("Food Camps") && !set.Name.Contains("_Master"))
                 Plugin.Error($"Blueprint set is not of the Food Camps type: {set.Name}");
             Utils.AddInPlace(ref set.buildings, new BuildingWeightedChance(){building=model});
+        }
+
+        private static void AddAsTraderPerk(GathererHutModel model){
+            var effect = CreateEffectFor(model);
+            AddToTrader(effect, 0); // Sahilda
+            AddToTrader(effect, 6); // Birdman
+            int otherTraderIndex = model.Name.Contains("Harvester")? 1 : 2; // Zhorg or Farluf
+            AddToTrader(effect, otherTraderIndex);
+        }
+
+        private static void AddToTrader(EffectModel effect, int traderIndex){
+            var trader = Settings.traders[traderIndex];
+            var drop = new EffectDrop(){chance=50f, reward=effect};
+            Utils.AddInPlace(ref trader.merchandise, drop);
+        }
+
+        private static EffectModel CreateEffectFor(GathererHutModel model){
+            var effect = Content.NewEffect<BuildingEffectModel>("effect_" + model.Name, model.Name + " Blueprint", "{1}");
+            effect.showBlueprintTooltip = true;
+            effect.building = model;
+            effect.CantToBePicked =  true;
+            effect.HasToBePicked = false;
+            effect.HasToBeUnlocked = false; // Eremite effects use true but I just want it to work
+            effect.rarity = EffectRarity.Epic;
+            effect.tradingBuyValue = 175;
+            return effect;
         }
 
         private static void Done(){
