@@ -1,12 +1,17 @@
-using System;
 using System.Linq;
+using System.Net.Mime;
+using Eremite;
 using Eremite.Buildings;
 using Eremite.Model;
 using Eremite.Model.Configs;
 using Eremite.Model.Effects;
 using Eremite.Services;
 using HarmonyLib;
+using QFSW.QC.Containers;
 using UniRx;
+using UnityEngine;
+using UnityEngine.Assertions.Must;
+using UnityEngine.Yoga;
 
 namespace EyeOfTheStorm
 {
@@ -39,15 +44,40 @@ namespace EyeOfTheStorm
             result.displayName = Utils.Text("Small " + result.displayName.Text);
 
             result.recipes = result.recipes.Select(recipe => CloneRecipe(recipe)).ToArray();
+            ClonePrefab(result);
             return model;
         }
 
+        public static int[] TO_HIDE_STONECUTTER => new int[]{6, 7, 8, 9, 35, 36, 66, 67, 111, 112, 116, 117, 124, 126, 127, 128};
+        public static int[] TO_HIDE_HARVESTER => new int[]{7, 9, 11, 17, 18, 19, 21, 22, 23, 24, 25, 26, 63, 64, 65, 90, 91, 92, 93, 94, 95};
+
         private static void ClonePrefab(GathererHutModel model){
-            var prefab = (GathererHut) model.prefab.Clone();
+            var prefab = Object.Instantiate(model.prefab, null, false);
+            Object.DontDestroyOnLoad(prefab);
             model.prefab = prefab;
+            prefab.name = model.Name;
             // Strangely, the model field for all Gatherer huts is set to the same stonecutter camp model
             // Which leads me to believe this field is unused. Thus, setting it is unneeded
             // prefab.model = model;
+            var go = model.prefab.gameObject;
+            var meshContent = go.transform.GetChild(0).GetChild(0);
+            var toHide = prefab.name.Contains("Harvester")? TO_HIDE_HARVESTER : TO_HIDE_STONECUTTER;
+            foreach (int child in toHide)  meshContent.GetChild(child).SetActive(false);
+
+            if( prefab.name.Contains("Harvester")){
+                AddComp(meshContent.GetChild(12), 0, 0, 0.45f);
+                AddComp(meshContent.GetChild(12), 0, 0, 0.9f);
+                AddComp(meshContent.GetChild(13), 0, 0, 0.45f);
+                AddComp(meshContent.GetChild(13), 0, 0, 0.9f);
+            } else {
+                AddComp(meshContent.GetChild(118), 0.5f, 0, 0);
+                AddComp(meshContent.GetChild(125), -0.5f, 0, 0);
+            }
+        }
+
+        private static void AddComp(Transform content, float x, float y, float z){
+            var clone = Object.Instantiate(content, content.parent, false);
+            clone.position = clone.position + new Vector3(x, y, z);
         }
 
         private static GathererHutModel PrimitiveModel => (GathererHutModel) Settings.GetBuilding("Primitive Trapper's Camp");
@@ -65,6 +95,7 @@ namespace EyeOfTheStorm
             Utils.AddInPlace(ref Settings.Buildings, model);
             Settings.gatherersHutsRecipes = Settings.gatherersHutsRecipes.AddRangeToArray(model.recipes);
             Settings.recipes = Settings.recipes.AddRangeToArray(model.recipes);
+
         }
 
         private static void AddAsBlueprint(GathererHutModel model){
@@ -88,9 +119,9 @@ namespace EyeOfTheStorm
 
         private static void AddAsTraderPerk(GathererHutModel model){
             var effect = CreateEffectFor(model);
-            AddToTrader(effect, 0); // Sahilda
+            AddToTrader(effect, 0); // Human
             AddToTrader(effect, 6); // Birdman
-            int otherTraderIndex = model.Name.Contains("Harvester")? 1 : 2; // Zhorg or Farluf
+            int otherTraderIndex = model.Name.Contains("Harvester")? 1 : 2; // Frog or Beaver
             AddToTrader(effect, otherTraderIndex);
         }
 
