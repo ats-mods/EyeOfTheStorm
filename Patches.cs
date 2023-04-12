@@ -8,11 +8,8 @@ using Eremite.Buildings.UI.Trade;
 using Eremite.View.HUD;
 using UnityEngine;
 using UnityEngine.UI;
-using System;
-using Eremite.Model.State;
 using Eremite.Buildings;
 using UniRx;
-using System.Net.Mime;
 
 namespace EyeOfTheStorm
 {

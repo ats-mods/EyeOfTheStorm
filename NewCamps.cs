@@ -1,12 +1,12 @@
 using System;
 using System.Linq;
 using Eremite.Buildings;
-using Eremite.Characters.Villagers;
 using Eremite.Model;
+using Eremite.Model.Configs;
 using Eremite.Services;
 using HarmonyLib;
+using UniRx;
 using UnityEngine;
-using UnityEngine.InputSystem.LowLevel;
 
 namespace EyeOfTheStorm
 {
@@ -16,11 +16,16 @@ namespace EyeOfTheStorm
         private static Settings Settings => Serviceable.Settings;
 
         public static void Patch(){
-            var primitiveStonecutter = CloneModel("Stonecutter's Camp");
-            var primitiveHarvester = CloneModel("Harvester Camp");
-            AddSOsToSettings(primitiveStonecutter);
-            AddSOsToSettings(primitiveHarvester);
+            CreatePrimitiveHut("Stonecutter's Camp");
+            CreatePrimitiveHut("Harvester Camp");
             Done();
+        }
+
+        private static void CreatePrimitiveHut(string modelName){
+            var originalModel = CloneModel(modelName);
+            var model = (GathererHutModel) originalModel.replaces;
+            AddSOsToSettings(model);
+            AddAsBlueprint(originalModel);
         }
 
         private static GathererHutModel CloneModel(string modelName){
@@ -33,8 +38,7 @@ namespace EyeOfTheStorm
             result.displayName = Utils.Text("Small " + result.displayName.Text);
 
             result.recipes = result.recipes.Select(recipe => CloneRecipe(recipe)).ToArray();
-            
-            return result;
+            return model;
         }
 
         private static void ClonePrefab(GathererHutModel model){
@@ -57,8 +61,28 @@ namespace EyeOfTheStorm
         }
 
         private static void AddSOsToSettings(GathererHutModel model){
-            Settings.Buildings = Settings.Buildings.AddToArray(model);
+            Utils.AddInPlace(ref Settings.Buildings, model);
             Settings.gatherersHutsRecipes = Settings.gatherersHutsRecipes.AddRangeToArray(model.recipes);
+            Settings.recipes = Settings.recipes.AddRangeToArray(model.recipes);
+        }
+
+        private static void AddAsBlueprint(GathererHutModel model){
+            var ascensionBlueprintConfig = Settings.blueprintsConfigs[3];
+            if(!ascensionBlueprintConfig.Name.Equals("Blueprints Config - Ascension"))
+                Plugin.Error($"Ascension blueprint config is of wrong name: {ascensionBlueprintConfig.Name}");
+            AddBlueprintToSet(model, ascensionBlueprintConfig, 0);
+            AddBlueprintToSet(model, ascensionBlueprintConfig, 1);
+            AddBlueprintToSet(model, ascensionBlueprintConfig, 11);
+            if(model.Name.Contains("Harvester")){ // Stonecutter is added to the wildcards by default
+                Utils.AddInPlace(ref ascensionBlueprintConfig.wildcards, new BuildingWeightedChance(){building=model});
+            }
+        }
+
+        private static void AddBlueprintToSet(GathererHutModel model, BiomeBlueprintsConfig config, int setIndex){
+            var set = config.blueprints[5].sets[setIndex];
+            if(!set.Name.Contains("Food Camps") && !set.Name.Contains("_Master"))
+                Plugin.Error($"Blueprint set is not of the Food Camps type: {set.Name}");
+            Utils.AddInPlace(ref set.buildings, new BuildingWeightedChance(){building=model});
         }
 
         private static void Done(){
@@ -85,6 +109,10 @@ namespace EyeOfTheStorm
                         Plugin.Log($"    {building.building.Name} ({building.weight})");
                     }
                 }
+            }
+            Plugin.Log("Dumping wildcards:");
+            foreach(var building in blueprints.wildcards){
+                Plugin.Log($"{building.building.Name} ({building.weight})");
             }
         }
     }

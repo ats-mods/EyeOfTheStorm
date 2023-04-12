@@ -4,6 +4,7 @@ using Eremite;
 using Eremite.Controller;
 using Eremite.Model;
 using Eremite.Services;
+using HarmonyLib;
 using Unity.IL2CPP.CompilerServices;
 using UnityEngine;
 
@@ -71,6 +72,10 @@ namespace EyeOfTheStorm
 
         public static bool HasAmber(int amount){
             return GameMB.StorageService.GetStorage().IsAvailable(new Good(MB.Settings.tradeCurrency.Name, amount));
+        }
+
+        public static void AddInPlace<T>(ref T[] array, T item){
+            array = array.AddToArray(item);
         }
     }
 }

@@ -9,6 +9,7 @@ namespace EyeOfTheStorm
         private Harmony harmony;
         private static Plugin Instance;
         public static void Log(object obj) => Instance.Logger.LogInfo(obj);
+        public static void Error(object obj) => Instance.Logger.LogError(obj);
 
         private void Awake()
         {
