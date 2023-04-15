@@ -54,6 +54,7 @@ namespace EyeOfTheStorm
         private static void ClonePrefab(GathererHutModel model){
             var prefab = Object.Instantiate(model.prefab, null, false);
             Object.DontDestroyOnLoad(prefab);
+            prefab.SetPosition(new Vector3(-1000, 0, -1000));
             model.prefab = prefab;
             prefab.name = model.Name;
             // Strangely, the model field for all Gatherer huts is set to the same stonecutter camp model
