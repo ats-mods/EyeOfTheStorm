@@ -120,9 +120,9 @@ namespace EyeOfTheStorm
 
         private static void AddAsTraderPerk(GathererHutModel model){
             var effect = CreateEffectFor(model);
-            AddToTrader(effect, 0); // Human
-            AddToTrader(effect, 6); // Birdman
-            int otherTraderIndex = model.Name.Contains("Harvester")? 1 : 2; // Frog or Beaver
+            AddToTrader(effect, 3); // Human
+            AddToTrader(effect, 9); // Birdman
+            int otherTraderIndex = model.Name.Contains("Harvester")? 4 : 5; // Frog or Beaver
             AddToTrader(effect, otherTraderIndex);
         }
 
