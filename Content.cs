@@ -102,10 +102,10 @@ namespace EyeOfTheStorm
         // }
 
         private static void Prestige25(){
-            var diff = NewDifficulty("Higher Reputation threshold increase.");
+            var diff = NewDifficulty("Species decadence increased");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige25", "Mythical Viceroy", 
-                "Your prestige has made you a legend amongst the people. They expect a lot from you. All reputation increase steps increase by 1"
+                "Your prestige has made you a legend amongst the people. They expect a lot from you. Every species' decadence is increased by 1."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;
