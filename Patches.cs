@@ -2,14 +2,16 @@ using HarmonyLib;
 using Eremite;
 using Eremite.Model;
 using Eremite.Services;
-using System.Configuration;
 using Eremite.Controller;
 using Eremite.Buildings.UI.Trade;
 using Eremite.View.HUD;
 using UnityEngine;
 using UnityEngine.UI;
-using Eremite.Buildings;
 using UniRx;
+using System.Linq;
+using Eremite.View;
+using Eremite.Controller.Villagers;
+using Eremite.Model.Effects;
 
 namespace EyeOfTheStorm
 {
@@ -19,40 +21,36 @@ namespace EyeOfTheStorm
         [HarmonyPostfix]
         private static void HookMainControllerSetup()
         {   
-            GathererHutCreator.Patch();
+            //GathererHutCreator.Patch();
             Content.AddPrestigeDifficulties();
         }
 
-        [HarmonyPatch(typeof(GameController), nameof(GameController.StartGame))]
-        [HarmonyPostfix]
-        private static void HookEveryGameStart()
-        {
-            // Too difficult to predict when GameController will exist and I can hook observers to it
-            // So just use Harmony and save us all some time
-            var isNewGame = MB.GameSaveService.IsNewGame();
-
-            if(isNewGame){
-                GathererHutCreator.UpdateEssentialBuildings();
+        [HarmonyPatch(typeof(RaceRevealEffectsController), nameof(RaceRevealEffectsController.ApplyEffectFor))]
+        [HarmonyPrefix]
+        private static bool ApplyRaceReveal(RaceRevealEffectsController __instance, RaceModel race){
+            if(!MB.MetaPerksService.IsRevealEffectUnlocked(race.Name) 
+                || race.revealEffect == null
+                || !Utils.HasCondition("eots_prestige23")){
+                return true;
             }
-
-            // Handle lingering or lacking firekeeper job slots from previous game.
-            if(Utils.HasPerk("eots_cc_blazeit")){
-                HearthFirekeeperEffectModel.UpgradeHearth();
+            var allRaces = GameMB.RacesService.Races.Select(r=>r.Name);
+            var checkedRaces = __instance.State;
+            var hasEmbarkFunc = MB.MetaPerksService.IsRevealEffectUnlocked;
+            //toCheck: all races which CAN still provide an embark bonus
+            var toCheck = allRaces.Where(hasEmbarkFunc).Except(checkedRaces);
+            int roll = Random.RandomRangeInt(1,  toCheck.Count());
+            if(roll == 1){
+                __instance.State.Clear();
+                __instance.State.AddRange(allRaces);
+                race.revealEffect.Apply(EffectContextType.None, 0);
+                GameMB.NewsService.PublishNews($"Received embarkation bonus of {race.GetDisplayNameFor(2)}");
             } else {
-                HearthFirekeeperEffectModel.DowngradeHearth();
+                __instance.State.Add(race.Name);
+                //Nothing else happens
             }
-
-            if(Utils.HasCondition("eots_prestige23")){
-                var perks = Serviceable.PerksService;
-                var corruptionMarkerName = "eots_prestige23_marker";
-
-                if(isNewGame) perks.AddPerk(corruptionMarkerName, false);
-
-                Serviceable.CornerstonesService.OnRewardsPicked
-                    .Where(()=>perks.HasPerk(corruptionMarkerName))
-                    .Subscribe<Unit>(()=>perks.RemovePerk(corruptionMarkerName));
-            }
+            return false;
         }
+
 
         [HarmonyPatch(typeof(TradeService), nameof(TradeService.CanForceArrival))]
         [HarmonyPostfix]
@@ -89,35 +87,6 @@ namespace EyeOfTheStorm
              if(Utils.HasCondition("eots_prestige26"))
             {
                 __result = Mathf.Min(5+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
-            }
-        }
-
-        [HarmonyPatch(typeof(CornerstonesService), nameof(CornerstonesService.FindRewardsFor))]
-        [HarmonyPostfix]
-        private static void CornerstonesService__FindRewardsFor(ref SeasonRewardModel __result){
-            var corruptionMarkerName = "eots_prestige23_marker";
-            if(__result != null && Utils.HasPerk(corruptionMarkerName))
-            {
-                __result = CorruptedSeasonRewardBuilder.Make(__result);
-            }
-        }
-
-        [HarmonyPatch(typeof(RewardPickPopup), nameof(RewardPickPopup.Show))]
-        [HarmonyPostfix]
-        private static void RewardPickPopup__Show(ref Button ___skipButton){
-            if(Utils.HasPerk("eots_prestige23_marker")){
-                ___skipButton.interactable = false;
-                return;
-            }
-            ___skipButton.interactable = true;
-        }
-
-        [HarmonyPatch(typeof(Hearth), nameof(Hearth.Corrupt))]
-        [HarmonyPostfix]
-        private static void Hearth__Corrupt(){
-            if(Utils.HasPerk("eots_cc_cystmenace_nested")){
-                if(!Serviceable.ReputationService.IsGameFinished())
-                    Serviceable.ReputationService.Abandon();
             }
         }
     }

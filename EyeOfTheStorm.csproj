@@ -35,6 +35,10 @@
 			<HintPath>$(StormPath)\\Against the Storm_Data\\Managed\\UnityEngine.UI.dll</HintPath>
 			<Private>false</Private>
 		</Reference>
+		<Reference Include="UnityEngine.UniTask">
+			<HintPath>$(StormPath)\\Against the Storm_Data\\Managed\\UniTask.dll</HintPath>
+			<Private>false</Private>
+		</Reference>
 		<Reference Include="Unity.InputSystem">
 			<HintPath>$(StormPath)\\Against the Storm_Data\\Managed\\Unity.InputSystem.dll</HintPath>
 			<Private>false</Private>

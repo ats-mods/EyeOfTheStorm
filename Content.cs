@@ -55,14 +55,25 @@ namespace EyeOfTheStorm
         }
 
         private static void Prestige23(){
-            var diff = NewDifficulty("First cornerstone pick is negative");
-            var name = "Pick your Poison";
-            var desc = "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone pick will be corrupted.";
-            var effect = NewEffect<DummyEffectModel>( "prestige23", name, desc );
+            var diff = NewDifficulty("Only one species' embark bonus");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige23",
+                "Hasty Embarkation",
+                "The caravan was ill-prepared for the journey ahead. Only one species will provide their embarkation bonus, chosen randomly."
+            );
             effect.overrideIcon = Utils.LoadSprite("poison.png");
             diff.modifiers.Last().effect = effect;
-            CorruptedSeasonRewardBuilder.Setup();
         }
+        
+        // private static void Prestige23(){
+        //     var diff = NewDifficulty("First cornerstone pick is negative");
+        //     var name = "Pick your Poison";
+        //     var desc = "The Blight found its way into the cargo of the Queen's Envoy. Your first Cornerstone pick will be corrupted.";
+        //     var effect = NewEffect<DummyEffectModel>( "prestige23", name, desc );
+        //     effect.overrideIcon = Utils.LoadSprite("poison.png");
+        //     diff.modifiers.Last().effect = effect;
+        //     CorruptedSeasonRewardBuilder.Setup();
+        // }
 
         private static void Prestige24(){
             var diff = NewDifficulty("Calling traders costs amber");

@@ -7,7 +7,7 @@ namespace EyeOfTheStorm
     public class Plugin : BaseUnityPlugin
     {
         private Harmony harmony;
-        private static Plugin Instance;
+        public static Plugin Instance;
         public static void Log(object obj) => Instance.Logger.LogInfo(obj);
         public static void Error(object obj) => Instance.Logger.LogError(obj);
 
