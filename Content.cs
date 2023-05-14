@@ -86,30 +86,30 @@ namespace EyeOfTheStorm
             Utils.Text($"Requires {TRADER_CALL_AMBER_COST} {Utils.LOCA_AMBER} Amber", KEY_REQUIRES_AMBER);
         }
 
-        private static void Prestige25(){
-            var diff = NewDifficulty("Blightrot now appears every second Clearance");
-            var blightrotMod = diff.modifiers[3];
-            var modsList = diff.modifiers.ToList();
-            modsList.RemoveAt(3);
+        // private static void Prestige25(){
+        //     var diff = NewDifficulty("Blightrot now appears every second Clearance");
+        //     var blightrotMod = diff.modifiers[3];
+        //     var modsList = diff.modifiers.ToList();
+        //     modsList.RemoveAt(3);
 
-            var effect = (HookedEffectModel) blightrotMod.effect.Clone();
-            SetupEffect(effect, "prestige25", null, null);
-            effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
-            effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
-            effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, Blightrot Cysts will appear in the settlement");
-            diff.modifiers = modsList.ToArray();
-            diff.modifiers.Last().effect = effect;
-        }
-
-        // private static void Prestige26(){
-        //     var diff = NewDifficulty("Higher resolve to gain Reputation");
-        //     var effect = NewEffect<DummyEffectModel>(
-        //         "prestige26", "Mythical Viceroy", 
-        //         "Your prestige has made you a legend amongst the people. +5 to Resolve thresholds for gaining Reputation."
-        //         );
-        //     effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
+        //     var effect = (HookedEffectModel) blightrotMod.effect.Clone();
+        //     SetupEffect(effect, "prestige25", null, null);
+        //     effect.hooks[0] = new SeasonChangeHook() { season = Season.Clearance, yearsInterval = 2};
+        //     effect.overrideIcon = Utils.LoadSprite("plaguedoctor.png");
+        //     effect.description = Utils.Text("Large swarms of blightrot migrate across the realm. Every second Clearance season, Blightrot Cysts will appear in the settlement");
+        //     diff.modifiers = modsList.ToArray();
         //     diff.modifiers.Last().effect = effect;
         // }
+
+        private static void Prestige25(){
+            var diff = NewDifficulty("Higher Reputation threshold increase.");
+            var effect = NewEffect<DummyEffectModel>(
+                "prestige25", "Mythical Viceroy", 
+                "Your prestige has made you a legend amongst the people. They expect a lot from you. All reputation increase steps increase by 1"
+                );
+            effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
+            diff.modifiers.Last().effect = effect;
+        }
 
         private static void Prestige27(){
             var diff = NewDifficulty("Shorter Drizzle and Clearance");

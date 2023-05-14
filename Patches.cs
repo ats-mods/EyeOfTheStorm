@@ -83,12 +83,12 @@ namespace EyeOfTheStorm
 
         [HarmonyPatch(typeof(ResolveService), nameof(ResolveService.GetMinResolveForReputation), typeof(RaceModel))]
         [HarmonyPostfix]
-        private static void ResolveService__GetMinResolveForReputation(ref int __result, RaceModel model){
-             if(Utils.HasCondition("eots_prestige26"))
+        private static void ResolveService__GetMinResolveForReputation(ResolveService __instance, ref int __result, RaceModel model){
+             if(Utils.HasCondition("eots_prestige25"))
             {
-                __result = Mathf.Min(5+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
+                int num = __instance.GetReputationGainFor(model.Name).FloorToInt();
+                __result = Mathf.Min(num+__result, model.resolveForReputationTreshold.y).RoundToIntMath();
             }
         }
     }
-    
 }
