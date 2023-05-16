@@ -105,7 +105,7 @@ namespace EyeOfTheStorm
             var diff = NewDifficulty("Species decadence increased");
             var effect = NewEffect<DummyEffectModel>(
                 "prestige25", "Mythical Viceroy", 
-                "Your prestige has made you a legend amongst the people. They expect a lot from you. Every species' decadence is increased by 1."
+                "Your prestige makes you a legend among the people, giving you a lot to live up to. Every species' decadence is increased by 1."
                 );
             effect.overrideIcon = Utils.LoadSprite("crowdgathers.png");
             diff.modifiers.Last().effect = effect;
