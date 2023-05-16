@@ -1,7 +1,7 @@
 # Eye of the Storm
-*Endgame content for against the storm*
+*Endgame content for Against the Storm*
 
-Do you think [Against the Storm](https://www.gog.com/game/against_the_storm) too easy? Do Prestige 20 dailies feel like a snoozefest? Fed up with all these casuals complaining about 'unfair' game mechanics. Does pressing the 'g' key on your keyboard autocomplete to 'git gud'? 
+Do you think [Against the Storm](https://www.gog.com/game/against_the_storm) is too easy? Do Prestige 20 dailies feel like a snoozefest? Do you roll your eyes at these casuals complaining about 'unfair' game mechanics? Does pressing the 'g' key on your keyboard autocomplete to 'git gud'? 
 
 If you answered yes to any of these questions, **Eye of the Storm** is the mod for you. 
 
