@@ -61,7 +61,7 @@ namespace EyeOfTheStorm
                 "Hasty Embarkation",
                 "The caravan was ill-prepared for the journey ahead. Only one species will provide their embarkation bonus, chosen randomly."
             );
-            effect.overrideIcon = Utils.LoadSprite("poison.png");
+            effect.overrideIcon = Utils.GetSpriteOfEffect("Fear of the Wilds T1 - normal");
             diff.modifiers.Last().effect = effect;
         }
         
