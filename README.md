@@ -13,11 +13,13 @@ Currently I add 5 prestige levels to the game. To see what these are, click the 
 
 <details>
   <summary>Expand to see the Prestige Modifiers</summary>
-* **Prestige 21**: Trade routes cost an additional +2 provisions
-* **Prestige 22**: Buildings demolished refund only 50% of their initial resource costs
-* **Prestige 23**: You get only one species' embark bonus, chosen randomly on each species arrival
-* **Prestige 24**: The act of calling a trader now costs 10 Amber
-* **Prestige 25**: The decadence (= the increase of Resolve thresholds for gaining reputation) increase by 1
+  
+- **Prestige 21**: Trade routes cost an additional +2 provisions
+- **Prestige 22**: Buildings demolished refund only 50% of their initial resource costs
+- **Prestige 23**: You get only one species' embark bonus, chosen randomly on each species arrival
+- **Prestige 24**: The act of calling a trader now costs 10 Amber
+- **Prestige 25**: The decadence (= the increase of Resolve thresholds for gaining reputation) increase by 1
+  
 </details>
 
 ## Installation
